@@ -1,12 +1,12 @@
 <div class="columns">
-    <div class="column">
+    <div class="column is-one-quarter">
         {{> tags}}
     </div>
     <div class="column">
 {{#if (isBookmarksFolder folder)}}
     {{> bookmarks}}
 {{else}}
-    {{> notes}}
+    {{> articles}}
 {{/if}}
     </div>
 </div>

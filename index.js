@@ -21,26 +21,26 @@ const config = {
 };
 
 const getTags = async () => {
-    const response = await axios.get('http://localhost:8000/tags', config);
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/tags', config);
 
     return response.data;
 };
 
 const getNotes = async (folderId, tags) => {
     tagsQuery = tags ? '&tags=cs.{' + tags + '}' : '';
-    const response = await axios.get('http://localhost:8000/notes?parent_id=eq.'+folderId+tagsQuery, config);
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+tagsQuery, config);
 
     return response.data;
 };
 
 const getFolders = async () => {
-    const response = await axios.get('http://localhost:8000/folders', config);
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/folders', config);
     
     return response.data;
 };
 
 const getFolder = async (id) => {
-    const response = await axios.get('http://localhost:8000/folders?folder_id=eq.'+id, config);
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/folders?folder_id=eq.'+id, config);
 
     return response.data[0];
 };
@@ -59,7 +59,6 @@ app.get('/folders/:id', (req, res) => {
     const id = req.params.id;
     const queryTags = req.query.tags;
     getTags().then((tags) => {
-        console.log(tags);
         getFolder(id).then((folder) => {
             getFolders().then((folders) => {
                 getNotes(id, queryTags).then((notes) => {
@@ -72,7 +71,6 @@ app.get('/folders/:id', (req, res) => {
                         url: req.protocol + '://' + req.get('host') + req.originalUrl,
                         helpers: {
                             isBookmarksFolder: function(folder) {
-                                console.log(folder);
                                 return folder.title === 'bookmarks';
                             }
                         }
