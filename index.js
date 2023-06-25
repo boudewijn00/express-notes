@@ -10,6 +10,7 @@ app.engine('handlebars', handlebars.engine({
 }));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
+app.use(express.static('public'));
 
 require('dotenv').config();
 
