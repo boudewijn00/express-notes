@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />  
+    <title>Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  </head>
+  <body>
+      <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <p class="navbar-item">
+            <span class="icon-text">
+  <span class="icon">
+    <i class="mdi mdi-home"></i>
+  </span>
+  <span>Home</span>
+</span>
+          </p>
+        </div>
+        <div class="navbar-menu">
+          <div class="navbar-start">
+            {{#folders}}
+            <a href="/folders/{{folder_id}}" class="navbar-item">{{title}}</a>
+            {{/folders}}
+          </div>
+        </div>
+      </nav>
+      <section class="section"></section>
+      <div class="container">
+        {{{body}}}
+      </div>
+    </section>
+  </body>
+</html>
