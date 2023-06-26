@@ -35,8 +35,8 @@
 <body>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
-        <img src="/bulma-logo.png" width="112" height="28">
+      <a class="navbar-item" href="/">
+        <img src="/home.png">
       </a>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="menuItems">
         <span aria-hidden="true"></span>
@@ -47,7 +47,9 @@
     <div class="navbar-menu" id="menuItems">
       <div class="navbar-start">
         {{#folders}}
-        <a href="/folders/{{folder_id}}" class="navbar-item">{{title}}</a>
+          {{#if (showFolder title) }}
+          <a href="/folders/{{folder_id}}" class="navbar-item">{{title}}</a>
+          {{/if}}
         {{/folders}}
       </div>
     </div>

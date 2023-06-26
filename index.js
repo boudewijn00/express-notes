@@ -7,6 +7,7 @@ const handlebars = require('express-handlebars');
 app.engine('handlebars', handlebars.engine({
     layoutsDir: __dirname + '/views/layouts',
     partialsDir: __dirname + '/views/partials',
+    helpers: require('./helpers/handlebars.js')
 }));
 app.set('view engine', 'handlebars');
 app.set('views', './views');
@@ -70,11 +71,6 @@ app.get('/folders/:id', (req, res) => {
                         notes: notes,
                         tags: tags,
                         url: req.protocol + '://' + req.get('host') + req.originalUrl,
-                        helpers: {
-                            isBookmarksFolder: function(folder) {
-                                return folder.title === 'bookmarks';
-                            }
-                        }
                     });
                 });
             });
