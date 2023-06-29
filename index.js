@@ -3,7 +3,6 @@ const app = express();
 const port = 3000;
 
 const handlebars = require('express-handlebars');
-const markdown = require('helper-markdown');
 
 app.engine('handlebars', handlebars.engine({
     layoutsDir: __dirname + '/views/layouts',
