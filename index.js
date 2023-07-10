@@ -70,6 +70,7 @@ app.get('/folders/:id', (req, res) => {
                         folder: folder,
                         notes: notes,
                         tags: tags,
+                        queryTags: queryTags,
                         url: req.protocol + '://' + req.get('host') + req.originalUrl,
                     });
                 });

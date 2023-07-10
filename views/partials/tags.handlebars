@@ -1,7 +1,11 @@
 <ul>
 {{#tags}}
     <li>
-        <a href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
+        {{#if (isEqual tag @root.queryTags)}}
+            <a class="has-text-weight-bold" href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
+        {{else}}
+            <a href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
+        {{/if}}
     </li>
 {{/tags}}
 </ul>
