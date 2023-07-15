@@ -30,9 +30,17 @@ const getTags = async () => {
 
 const getNotes = async (folderId, tags) => {
     tagsQuery = tags ? '&tags=cs.{' + tags + '}' : '';
-    const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+tagsQuery, config);
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+tagsQuery+'&order=created_time.desc', config);
+    
+    const notes = response.data.reduce((r, a) => {
+        r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
+        
+        return r;
+    }, {});
 
-    return response.data;
+    console.log(notes);
+
+    return notes;
 };
 
 const getFolders = async () => {
