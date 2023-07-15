@@ -54,6 +54,10 @@ app.get('/', (req, res) => {
             layout : 'main', 
             folders: folders
         });
+    }).catch(() => {
+        res.render('error', {
+            layout : 'main'
+        });
     });
 });
 
@@ -76,7 +80,9 @@ app.get('/folders/:id', (req, res) => {
                 });
             });
         });
-    });
+    }).catch((error) => {
+        res.send('an error occured');
+    })
 });
 
 app.listen(port, () => {
