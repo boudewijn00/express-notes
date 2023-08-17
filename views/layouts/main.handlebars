@@ -6,8 +6,44 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Notes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
-  <link rel="stylesheet" href="/mystyles.css">
+  <link defer rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+  <link defer rel="stylesheet" href="/mystyles.css">
+  <style>
+    .content pre {
+      padding: 0em;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <img src="/home.png" width="28" height="28">
+      </a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="menuItems">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    {{#if folders }}
+    <div class="navbar-menu" id="menuItems">
+      <div class="navbar-start">
+        {{#folders}}
+        {{#if (showFolder title) }}
+        <a href="/folders/{{folder_id}}" class="navbar-item">{{title}}</a>
+        {{/if}}
+        {{/folders}}
+      </div>
+    </div>
+    {{/if}}
+  </nav>
+  <section class="section">
+    <div class="container">
+      {{{body}}}
+    </div>
+  </section>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
   <script type="text/javascript">
@@ -33,42 +69,6 @@
 
     });
   </script>
-  <style>
-    .content pre {
-      padding: 0em;
-    }
-  </style>
-</head>
-
-<body>
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/">
-        <img src="/home.png" width="48" height="48">
-      </a>
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="menuItems">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-    {{#if folders }}
-    <div class="navbar-menu" id="menuItems">
-      <div class="navbar-start">
-        {{#folders}}
-        {{#if (showFolder title) }}
-        <a href="/folders/{{folder_id}}" class="navbar-item">{{title}}</a>
-        {{/if}}
-        {{/folders}}
-      </div>
-    </div>
-    {{/if}}
-  </nav>
-  <section class="section">
-    <div class="container">
-      {{{body}}}
-    </div>
-  </section>
   <script src="https://getinsights.io/js/insights.js"></script>
   <script>
     insights.init('k3v8OoDfxiO4PG_B');
