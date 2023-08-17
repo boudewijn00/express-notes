@@ -38,8 +38,6 @@ const getNotes = async (folderId, tags) => {
         return r;
     }, {});
 
-    console.log(notes);
-
     return notes;
 };
 
