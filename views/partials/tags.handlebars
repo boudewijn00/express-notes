@@ -2,9 +2,9 @@
 {{#tags}}
     <li>
         {{#if (isEqual tag @root.queryTags)}}
-            <a class="has-text-weight-bold" href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
+            <a aria-label="active tag link" class="has-text-weight-bold" href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
         {{else}}
-            <a href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
+            <a aria-label="tag link" href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
         {{/if}}
     </li>
 {{/tags}}
