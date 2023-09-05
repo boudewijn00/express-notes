@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 
 const handlebars = require('express-handlebars');
 
@@ -30,7 +31,7 @@ const getTags = async () => {
 
 const getNotes = async (folderId, tags) => {
     tagsQuery = tags ? '&tags=cs.{' + tags + '}' : '';
-    const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+tagsQuery+'&order=created_time.desc', config);
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+tagsQuery+'&order=created_time.desc&note_id=neq.'+homeArticle, config);
     
     const notes = response.data.reduce((r, a) => {
         r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
@@ -53,12 +54,21 @@ const getFolder = async (id) => {
     return response.data[0];
 };
 
+const getNoteByNoteId = async (id) => {
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?note_id=eq.'+id, config);
+
+    return response.data[0];
+};
+
 app.get('/', (req, res) => {
     const tags = req.query.tags;
     getFolders().then((folders) => {
-        res.render('home', {
-            layout : 'main', 
-            folders: folders
+        getNoteByNoteId(homeArticle).then((note) => { 
+            res.render('home', {
+                layout : 'main', 
+                folders: folders,
+                note: note,
+            });
         });
     }).catch(() => {
         res.render('error', {
