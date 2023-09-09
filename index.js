@@ -23,6 +23,27 @@ const config = {
     }
 };
 
+function createAndResolvePromises(notes) {
+    let promises = [];
+
+    for (let i in notes) {
+        let promise = new Promise(async (resolve, reject) => {
+            let note = notes[i];
+            let regex = /!\[([^\]]+\.png)\]\(:\/([a-f0-9]+)\)/;
+            let matched = note.body.match(regex);
+
+            if(matched){
+                const response = await axios.get(process.env.POSTGREST_HOST+':8000/resources?title=eq.'+matched[1], config);
+                note.body = note.body.replace(matched[0], '<img src="data:image/png;base64,'+response.data[0].contents+'" />');
+            }
+            resolve(note);
+        });
+        promises.push(promise);
+    }
+
+    return Promise.all(promises);
+}
+
 const getTags = async () => {
     const response = await axios.get(process.env.POSTGREST_HOST+':8000/tags', config);
 
@@ -33,13 +54,15 @@ const getNotes = async (folderId, tags) => {
     tagsQuery = tags ? '&tags=cs.{' + tags + '}' : '';
     const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+tagsQuery+'&order=created_time.desc&note_id=neq.'+homeArticle, config);
     
-    const notes = response.data.reduce((r, a) => {
-        r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
-        
-        return r;
-    }, {});
+    return createAndResolvePromises(response.data).then(results => {   
+        const notes = results.reduce((r, a) => {
+            r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
+            
+            return r;
+        }, {});
 
-    return notes;
+        return notes;
+    });
 };
 
 const getFolders = async () => {
