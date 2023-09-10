@@ -23,7 +23,7 @@ const config = {
     }
 };
 
-function createAndResolvePromises(notes) {
+function replaceResourceTitleByImageTag(notes) {
     let promises = [];
 
     for (let i in notes) {
@@ -36,8 +36,10 @@ function createAndResolvePromises(notes) {
                 const response = await axios.get(process.env.POSTGREST_HOST+':8000/resources?title=eq.'+matched[1], config);
                 note.body = note.body.replace(matched[0], '<img src="data:'+response.data[0].mime+';base64,'+response.data[0].contents+'" />');
             }
+
             resolve(note);
         });
+
         promises.push(promise);
     }
 
@@ -54,7 +56,7 @@ const getNotes = async (folderId, tags) => {
     tagsQuery = tags ? '&tags=cs.{' + tags + '}' : '';
     const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+tagsQuery+'&order=created_time.desc&note_id=neq.'+homeArticle, config);
     
-    return createAndResolvePromises(response.data).then(results => {   
+    return replaceResourceTitleByImageTag(response.data).then(results => {   
         const notes = results.reduce((r, a) => {
             r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
             
@@ -80,17 +82,17 @@ const getFolder = async (id) => {
 const getNoteByNoteId = async (id) => {
     const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?note_id=eq.'+id, config);
 
-    return response.data[0];
+    return replaceResourceTitleByImageTag(response.data);
 };
 
 app.get('/', (req, res) => {
     const tags = req.query.tags;
     getFolders().then((folders) => {
-        getNoteByNoteId(homeArticle).then((note) => { 
+        getNoteByNoteId(homeArticle).then((notes) => { 
             res.render('home', {
                 layout : 'main', 
                 folders: folders,
-                note: note,
+                note: notes[0],
             });
         });
     }).catch(() => {
