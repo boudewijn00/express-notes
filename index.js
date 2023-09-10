@@ -34,7 +34,7 @@ function replaceResourceTitleByImageTag(notes) {
 
             if(matched){
                 const response = await axios.get(process.env.POSTGREST_HOST+':8000/resources?title=eq.'+matched[1], config);
-                note.body = note.body.replace(matched[0], '<img src="data:'+response.data[0].mime+';base64,'+response.data[0].contents+'" />');
+                note.body = note.body.replace(matched[0], '<img src="data:image/png;base64,'+response.data[0].contents+'" />');
             }
 
             resolve(note);
