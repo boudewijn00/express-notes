@@ -29,12 +29,12 @@ function createAndResolvePromises(notes) {
     for (let i in notes) {
         let promise = new Promise(async (resolve, reject) => {
             let note = notes[i];
-            let regex = /!\[([^\]]+\.png)\]\(:\/([a-f0-9]+)\)/;
+            let regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/;
             let matched = note.body.match(regex);
 
             if(matched){
                 const response = await axios.get(process.env.POSTGREST_HOST+':8000/resources?title=eq.'+matched[1], config);
-                note.body = note.body.replace(matched[0], '<img src="data:image/png;base64,'+response.data[0].contents+'" />');
+                note.body = note.body.replace(matched[0], '<img src="data:'+response.data[0].mime+';base64,'+response.data[0].contents+'" />');
             }
             resolve(note);
         });
