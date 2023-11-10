@@ -1,7 +1,4 @@
 module.exports = {
-    isBookmarksFolder: function (folder) {
-        return folder.title !== 'articles';
-    },
     isArticlesFolder: function (folder) {
         return folder.title === 'articles';
     },
@@ -9,7 +6,7 @@ module.exports = {
         return arg1 === arg2;
     },
     showFolder: function (title) {
-        return title === 'backend' || title === 'frontend' || title === 'misc' || title === 'articles';
+        return title === 'backend' || title === 'frontend' || title === 'misc' || title === 'articles' || title === 'hardware';
     },
     markdown: function (content) {        
         html = require('markdown-it')({
