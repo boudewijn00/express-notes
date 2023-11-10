@@ -68,7 +68,7 @@ const getNotes = async (folderId, tags) => {
 };
 
 const getFolders = async () => {
-    const response = await axios.get(process.env.POSTGREST_HOST+':8000/folders', config);
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/folders?order=title', config);
     
     return response.data;
 };

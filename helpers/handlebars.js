@@ -10,7 +10,6 @@ module.exports = {
         || title === 'soft skills'
         || title === 'frontend' 
         || title === 'misc' 
-        || title === 'articles' 
         || title === 'hardware';
     },
     markdown: function (content) {        
