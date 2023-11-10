@@ -1,6 +1,6 @@
 module.exports = {
     isBookmarksFolder: function (folder) {
-        return folder.title === 'bookmarks';
+        return folder.title !== 'articles';
     },
     isArticlesFolder: function (folder) {
         return folder.title === 'articles';
