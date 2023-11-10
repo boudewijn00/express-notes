@@ -6,7 +6,12 @@ module.exports = {
         return arg1 === arg2;
     },
     showFolder: function (title) {
-        return title === 'backend' || title === 'frontend' || title === 'misc' || title === 'articles' || title === 'hardware';
+        return title === 'backend' 
+        || title === 'soft skills'
+        || title === 'frontend' 
+        || title === 'misc' 
+        || title === 'articles' 
+        || title === 'hardware';
     },
     markdown: function (content) {        
         html = require('markdown-it')({
