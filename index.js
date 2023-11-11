@@ -50,13 +50,7 @@ const getNotes = async (folderId) => {
     const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+'&order=created_time.desc&note_id=neq.'+homeArticle, config);
     
     return replaceResourceTitleByImageTag(response.data).then(results => {   
-        const notes = results.reduce((r, a) => {
-            r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
-            
-            return r;
-        }, {});
-
-        return notes;
+        return results;
     });
 };
 
@@ -78,46 +72,31 @@ const getNoteByNoteId = async (id) => {
     return replaceResourceTitleByImageTag(response.data);
 };
 
-const filterTagsFromNotes = (notes) => {
-    let tags = [];
+const getTagsFromNotes = (notes) => {
+    const result = notes.map((note) => {
+        return note.tags;
+    }).flat();
 
-    for (let i in notes) {
-        for (let j in notes[i]) {
-            let note = notes[i][j];
-            for (let k in note.tags) {
-                tags.push(note.tags[k]);
-            }
-        }
-    }
+    return [...new Set(result)];
+}
 
-    return tags.filter((v, i, a) => a.indexOf(v) === i);
+const groupNotesByDate = (notes) => {
+    const grouped = notes.reduce((r, a) => {
+        r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
+        
+        return r;
+    }, {});
+
+    return grouped;
 }
 
 const filterNotesByTag = (notes, tag) => {
-    if(tag) {
-        for (let i in notes) {
-            for (let j in notes[i]) {
-                let note = notes[i][j];
-                let found = false;
-                for (let k in note.tags) {
-                    if(tag.includes(note.tags[k])) {
-                        found = true;
-                    }
-                }
-                if(!found) {
-                    delete notes[i][j];
-                }
-            }
-        }
-    }
-
-    for (let i in notes) {
-        if(!notes[i][0]) {
-            delete notes[i];
-        }
-    }
-
-    return notes;
+    if(!tag) return notes;
+    const result = notes.filter((note) => {
+        return note.tags.includes(tag);
+    });
+    
+    return result;
 }
 
 app.get('/', (req, res) => {
@@ -143,12 +122,13 @@ app.get('/folders/:id', (req, res) => {
     getFolder(id).then((folder) => {
         getFolders().then((folders) => {
             getNotes(id).then((notes) => {
+                const filteredNotesByTag = filterNotesByTag(notes, queryTag);
                 res.render('notes', {
                     layout : 'main', 
                     folders: folders,
                     folder: folder,
-                    tags: filterTagsFromNotes(notes),
-                    notes: filterNotesByTag(notes, queryTag),
+                    tags: getTagsFromNotes(notes),
+                    notes: groupNotesByDate(filteredNotesByTag),
                     queryTag: queryTag,
                     url: req.protocol + '://' + req.get('host') + req.originalUrl,
                 });
