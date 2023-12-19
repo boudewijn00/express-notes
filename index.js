@@ -46,24 +46,11 @@ function replaceResourceTitleByImageTag(notes) {
     return Promise.all(promises);
 }
 
-const getTags = async () => {
-    const response = await axios.get(process.env.POSTGREST_HOST+':8000/tags', config);
-
-    return response.data;
-};
-
-const getNotes = async (folderId, tags) => {
-    tagsQuery = tags ? '&tags=cs.{' + tags + '}' : '';
-    const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+tagsQuery+'&order=created_time.desc&note_id=neq.'+homeArticle, config);
+const getNotes = async (folderId) => {
+    const response = await axios.get(process.env.POSTGREST_HOST+':8000/notes?parent_id=eq.'+folderId+'&order=created_time.desc&note_id=neq.'+homeArticle, config);
     
     return replaceResourceTitleByImageTag(response.data).then(results => {   
-        const notes = results.reduce((r, a) => {
-            r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
-            
-            return r;
-        }, {});
-
-        return notes;
+        return results;
     });
 };
 
@@ -85,6 +72,33 @@ const getNoteByNoteId = async (id) => {
     return replaceResourceTitleByImageTag(response.data);
 };
 
+const getTagsFromNotes = (notes) => {
+    const result = notes.map((note) => {
+        return note.tags;
+    }).flat();
+
+    return [...new Set(result)];
+}
+
+const groupNotesByDate = (notes) => {
+    const grouped = notes.reduce((r, a) => {
+        r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
+        
+        return r;
+    }, {});
+
+    return grouped;
+}
+
+const filterNotesByTag = (notes, tag) => {
+    if(!tag) return notes;
+    const result = notes.filter((note) => {
+        return note.tags.includes(tag);
+    });
+    
+    return result;
+}
+
 app.get('/', (req, res) => {
     const tags = req.query.tags;
     getFolders().then((folders) => {
@@ -104,20 +118,19 @@ app.get('/', (req, res) => {
 
 app.get('/folders/:id', (req, res) => {
     const id = req.params.id;
-    const queryTags = req.query.tags;
-    getTags().then((tags) => {
-        getFolder(id).then((folder) => {
-            getFolders().then((folders) => {
-                getNotes(id, queryTags).then((notes) => {
-                    res.render('notes', {
-                        layout : 'main', 
-                        folders: folders,
-                        folder: folder,
-                        notes: notes,
-                        tags: tags,
-                        queryTags: queryTags,
-                        url: req.protocol + '://' + req.get('host') + req.originalUrl,
-                    });
+    const queryTag = req.query.tag;
+    getFolder(id).then((folder) => {
+        getFolders().then((folders) => {
+            getNotes(id).then((notes) => {
+                const filteredNotesByTag = filterNotesByTag(notes, queryTag);
+                res.render('notes', {
+                    layout : 'main', 
+                    folders: folders,
+                    folder: folder,
+                    tags: getTagsFromNotes(notes),
+                    notes: groupNotesByDate(filteredNotesByTag),
+                    queryTag: queryTag,
+                    url: req.protocol + '://' + req.get('host') + req.originalUrl,
                 });
             });
         });

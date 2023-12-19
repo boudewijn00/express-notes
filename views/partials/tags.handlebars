@@ -1,11 +1,11 @@
 <ul>
-{{#tags}}
+{{#each tags}}
     <li>
-        {{#if (isEqual tag @root.queryTags)}}
-            <a aria-label="active tag link" class="has-text-weight-bold" href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
+        {{#if (isEqual this @root.queryTag)}}
+            <a aria-label="active tag link" class="has-text-weight-bold" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
         {{else}}
-            <a aria-label="tag link" href={{url}}{{folder.folder_id}}"?tags={{tag}}">{{tag}}</a>
+            <a aria-label="tag link" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
         {{/if}}
     </li>
-{{/tags}}
+{{/each}}
 </ul>

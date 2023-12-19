@@ -8,6 +8,13 @@
             {{#if this.link_excerpt}}
                 <p>{{this.link_excerpt}}</p>
             {{/if}}
+            {{#if this.tags}}
+                <div class="tags" style="margin-top:5px">
+                {{#each this.tags}}
+                    <span class="tag is-light">{{this}}</span>
+                {{/each}}
+                </div>
+            {{/if}}
         </li>
     {{/each}}
     </ul>
