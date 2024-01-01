@@ -10,7 +10,9 @@ module.exports = {
         || title === 'soft skills'
         || title === 'frontend' 
         || title === 'misc' 
-        || title === 'hardware';
+        || title === 'hardware'
+        || title === 'data'
+        || title === 'architecture';
     },
     markdown: function (content) {        
         html = require('markdown-it')({
