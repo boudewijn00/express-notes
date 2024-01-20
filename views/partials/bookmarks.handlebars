@@ -5,6 +5,9 @@
     {{#each this}}
         <li class="block">
             <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
+            {{#if this.link_excerpt}}
+                <p>{{this.link_excerpt}}</p>
+            {{/if}}
             {{#if this.tags}}
                 <div class="tags" style="margin-top:5px">
                 {{#each this.tags}}
