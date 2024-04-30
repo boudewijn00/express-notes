@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 3001;
 const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 
 const handlebars = require('express-handlebars');
