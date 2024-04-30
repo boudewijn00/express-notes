@@ -144,5 +144,5 @@ app.get('/folders/:id', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Example app listening at http://localhost:${port}`);
 });
