@@ -99,6 +99,10 @@ const filterNotesByTag = (notes, tag) => {
     return result;
 }
 
+app.get('/test', (req, res) => {
+    res.render('test');
+});
+
 app.get('/', (req, res) => {
     const tags = req.query.tags;
     getFolders().then((folders) => {
