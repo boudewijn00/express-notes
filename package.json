@@ -6,9 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "css-build": "node-sass --omit-source-map-url sass/mystyles.scss public/mystyles.css --style compressed",
-    "css-watch": "npm run css-build -- --watch"
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -21,8 +19,6 @@
   },
   "module": "commonjs",
   "devDependencies": {
-    "bulma": "^0.9.4",
-    "node-sass": "^9.0.0",
     "nodemon": "^2.0.22"
   }
 }
