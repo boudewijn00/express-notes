@@ -139,8 +139,8 @@ app.get('/folders/:id', (req, res) => {
     })
 });
 
-app.get('/BingSiteAuth.xml', (req, res) => {
-    res.send('BingSiteAuth.xml');
+app.get('/sitemap.xml', (req, res) => {
+    res.sendFile(__dirname + '/sitemap.xml');
 });
 
 app.listen(port, () => {
