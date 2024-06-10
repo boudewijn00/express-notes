@@ -139,6 +139,10 @@ app.get('/folders/:id', (req, res) => {
     })
 });
 
+app.get('/BingSiteAuth.xml', (req, res) => {
+    res.send('BingSiteAuth.xml');
+});
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
