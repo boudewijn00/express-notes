@@ -12,7 +12,9 @@ module.exports = {
         || title === 'misc' 
         || title === 'hardware'
         || title === 'data'
-        || title === 'architecture';
+        || title === 'architecture'
+        || title === 'artificial intelligence'
+        || title === 'devops';
     },
     markdown: function (content) {        
         html = require('markdown-it')({
