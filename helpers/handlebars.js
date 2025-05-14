@@ -1,20 +1,17 @@
 module.exports = {
-    isArticlesFolder: function (folder) {
-        return folder.title === 'articles';
-    },
-    isEqual: function (arg1, arg2) {
-        return arg1 === arg2;
-    },
-    showFolder: function (title) {
-        return title === 'backend' 
+    isArticlesFolder: (folder) => folder.title === 'articles',
+    isEqual: (arg1, arg2) => arg1 === arg2,
+    showFolder: (title) => title === 'backend' 
         || title === 'soft skills'
         || title === 'frontend' 
         || title === 'misc' 
         || title === 'hardware'
         || title === 'data'
-        || title === 'architecture';
-    },
-    markdown: function (content) {        
+        || title === 'devops'
+        || title === 'software'
+        || title === 'documentation'
+        || title === 'architecture',
+    markdown: (content) => {        
         html = require('markdown-it')({
             html: true,
             linkify: true,

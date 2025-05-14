@@ -6,8 +6,8 @@ const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 const handlebars = require('express-handlebars');
 
 app.engine('handlebars', handlebars.engine({
-    layoutsDir: __dirname + '/views/layouts',
-    partialsDir: __dirname + '/views/partials',
+    layoutsDir: `${__dirname}/views/layouts`,
+    partialsDir: `${__dirname}/views/partials`,
     helpers: require('./helpers/handlebars.js')
 }));
 app.set('view engine', 'handlebars');
@@ -24,21 +24,21 @@ const config = {
 };
 
 function replaceResourceTitleByImageTag(notes) {
-    let promises = [];
+    const promises = [];
 
-    for (let i in notes) {
-        let promise = new Promise(async (resolve, reject) => {
-            let note = notes[i];
-            let regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/;
-            let matched = note.body.match(regex);
+    for (const i in notes) {
+        const promise = (async () => {
+            const note = notes[i];
+            const regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/;
+            const matched = note.body.match(regex);
 
             if(matched){
-                const response = await axios.get('https://'+process.env.POSTGREST_HOST+'/resources?title=eq.'+matched[1], config);
-                note.body = note.body.replace(matched[0], '<img src="data:image/png;base64,'+response.data[0].contents+'" />');
+                const response = await axios.get(`https://${process.env.POSTGREST_HOST}/resources?title=eq.${matched[1]}`, config);
+                note.body = note.body.replace(matched[0], `<img src="data:image/png;base64,${response.data[0].contents}" />`);
             }
 
-            resolve(note);
-        });
+            return note;
+        })();
 
         promises.push(promise);
     }
@@ -47,7 +47,7 @@ function replaceResourceTitleByImageTag(notes) {
 }
 
 const getNotes = async (folderId) => {
-    const response = await axios.get('https://'+process.env.POSTGREST_HOST+'/notes?parent_id=eq.'+folderId+'&order=created_time.desc&note_id=neq.'+homeArticle, config);
+    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/notes?parent_id=eq.${folderId}&order=created_time.desc&note_id=neq.${homeArticle}`, config);
     
     return replaceResourceTitleByImageTag(response.data).then(results => {   
         return results;
@@ -55,27 +55,27 @@ const getNotes = async (folderId) => {
 };
 
 const getFolders = async () => {
-    const response = await axios.get('https://'+process.env.POSTGREST_HOST+'/folders?order=title', config);
+    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/folders?order=title`, config);
     
     return response.data;
 };
 
 const getFolder = async (id) => {
-    const response = await axios.get('https://'+process.env.POSTGREST_HOST+'/folders?folder_id=eq.'+id, config);
+    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/folders?folder_id=eq.${id}`, config);
 
     return response.data[0];
 };
 
 const getNoteByNoteId = async (id) => {
-    const response = await axios.get('https://'+process.env.POSTGREST_HOST+'/notes?note_id=eq.'+id, config);
+    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/notes?note_id=eq.${id}`, config);
 
     return replaceResourceTitleByImageTag(response.data);
 };
 
 const getTagsFromNotes = (notes) => {
-    const result = notes.map((note) => {
+    const result = notes.flatMap((note) => {
         return note.tags;
-    }).flat();
+    });
 
     return [...new Set(result)];
 }
@@ -109,7 +109,7 @@ app.get('/', (req, res) => {
                 note: notes[0],
             });
         });
-    }).catch(() => {
+    }).catch((error) => {
         res.render('error', {
             layout : 'main'
         });
@@ -130,7 +130,7 @@ app.get('/folders/:id', (req, res) => {
                     tags: getTagsFromNotes(notes),
                     notes: groupNotesByDate(filteredNotesByTag),
                     queryTag: queryTag,
-                    url: req.protocol + '://' + req.get('host') + req.originalUrl,
+                    url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
                 });
             });
         });
@@ -140,7 +140,7 @@ app.get('/folders/:id', (req, res) => {
 });
 
 app.get('/sitemap.xml', (req, res) => {
-    res.sendFile(__dirname + '/sitemap.xml');
+    res.sendFile(`${__dirname}/sitemap.xml`);
 });
 
 app.listen(port, () => {
