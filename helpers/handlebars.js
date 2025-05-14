@@ -10,7 +10,8 @@ module.exports = {
         || title === 'devops'
         || title === 'software'
         || title === 'documentation'
-        || title === 'architecture',
+        || title === 'architecture'
+        || title === 'artificial intelligence',
     markdown: (content) => {        
         html = require('markdown-it')({
             html: true,
