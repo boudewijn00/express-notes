@@ -5,6 +5,9 @@
             <div class="content">
                 <h1 class="title">{{this.title}}</h1>
                 {{{markdown this.body}}}
+                {{#if this.link_by_line}}
+                    <p>Source: {{this.link_by_line}}</p>
+                {{/if}}
             </div>
         {{/each}}
     </div>
