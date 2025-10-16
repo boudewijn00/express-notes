@@ -30,10 +30,10 @@ function replaceResourceTitleByImageTag(notes) {
     for (const i in notes) {
         const promise = (async () => {
             const note = notes[i];
-            const regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/;
-            const matched = note.body.match(regex);
+            const regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/g;
+            const matches = note.body.matchAll(regex);
 
-            if(matched){
+            for (const matched of matches) {
                 const response = await axios.get(`https://${process.env.POSTGREST_HOST}/resources?title=eq.${matched[1]}`, config);
                 note.body = note.body.replace(matched[0], `<img src="data:image/png;base64,${response.data[0].contents}" />`);
             }
