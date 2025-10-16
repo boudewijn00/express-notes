@@ -56,13 +56,15 @@
     </div>
     {{#if folders }}
     <div class="navbar-menu" id="menuItems">
-      <div class="navbar-start">
-        {{#folders}}
-        {{#if (showFolder title) }}
-        <a href="/folders/{{folder_id}}" class="navbar-item">{{title}}</a>
-        {{/if}}
-        {{/folders}}
-      </div>
+      <aside class="menu">
+        <ul class="menu-list">
+          {{#folders}}
+          {{#if (showFolder title) }}
+          <li><a href="/folders/{{folder_id}}">{{title}}</a></li>
+          {{/if}}
+          {{/folders}}
+        </ul>
+      </aside>
     </div>
     {{/if}}
     </nav>
