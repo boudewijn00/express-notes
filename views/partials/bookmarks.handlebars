@@ -8,6 +8,9 @@
             {{#if this.link_excerpt}}
                 <p>{{this.link_excerpt}}</p>
             {{/if}}
+            {{#if this.link_by_line}}
+                <p>Source: <a href="{{this.link_by_line}}">{{this.link_by_line}}</a></p>
+            {{/if}}
             {{#if this.tags}}
                 <div class="tags" style="margin-top:5px">
                 {{#each this.tags}}
