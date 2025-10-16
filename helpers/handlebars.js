@@ -1,17 +1,7 @@
 module.exports = {
     isArticlesFolder: (folder) => folder.title === 'articles',
     isEqual: (arg1, arg2) => arg1 === arg2,
-    showFolder: (title) => title === 'backend' 
-        || title === 'soft skills'
-        || title === 'frontend' 
-        || title === 'misc' 
-        || title === 'hardware'
-        || title === 'data'
-        || title === 'devops'
-        || title === 'software'
-        || title === 'documentation'
-        || title === 'architecture'
-        || title === 'artificial intelligence',
+    showFolder: () => true,
     markdown: (content) => {        
         html = require('markdown-it')({
             html: true,
