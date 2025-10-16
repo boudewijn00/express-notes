@@ -20,5 +20,13 @@ module.exports = {
           }).render(content);
 
         return html;
+    },
+    truncateWords: (str, maxWords) => {
+        if (!str) return '';
+        const words = str.split(' ');
+        if (words.length > maxWords) {
+            return words.slice(0, maxWords).join(' ') + '...';
+        }
+        return str;
     }
 }
