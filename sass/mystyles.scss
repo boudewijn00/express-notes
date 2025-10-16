@@ -6,3 +6,8 @@ body {
   font-family: $family-monospace;
 }
 
+.home-icon-desktop {
+  /* This mimics the horizontal padding of a bulma .column to align the icon */
+  padding: 0 0.75rem;
+}
+
