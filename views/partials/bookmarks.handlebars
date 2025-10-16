@@ -6,7 +6,7 @@
         <li class="block">
             <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
             {{#if this.link_excerpt}}
-                <p>{{truncateWords this.link_excerpt 200}}</p>
+                <p>{{truncateWords this.link_excerpt 100}}</p>
             {{/if}}
             {{#if this.link_by_line}}
                 <p><b>{{this.link_by_line}}</b></p>
