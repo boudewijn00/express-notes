@@ -10,6 +10,7 @@ app.engine('handlebars', handlebars.engine({
     partialsDir: `${__dirname}/views/partials`,
     helpers: require('./helpers/handlebars.js')
 }));
+
 app.set('view engine', 'handlebars');
 app.set('views', './views');
 app.use(express.static('public'));
