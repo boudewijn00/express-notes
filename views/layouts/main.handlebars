@@ -42,8 +42,7 @@
 </head>
 
 <body>
-  <div class="layout-wrapper">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+  <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a aria-label="home" class="navbar-item" href="/">
         <img alt="home icon" src="/home.png" width="28" height="28">
@@ -67,15 +66,30 @@
       </aside>
     </div>
     {{/if}}
-    </nav>
-    <main class="main-content">
-      <section class="section">
-        <div class="container">
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-one-quarter is-hidden-touch">
+          {{#if folders}}
+          <aside class="menu">
+            <ul class="menu-list">
+              {{#folders}}
+              {{#if (showFolder title) }}
+              <li><a href="/folders/{{folder_id}}">{{title}}</a></li>
+              {{/if}}
+              {{/folders}}
+            </ul>
+          </aside>
+          {{/if}}
+        </div>
+        <div class="column">
           {{{body}}}
         </div>
-      </section>
-    </main>
-  </div>
+      </div>
+    </div>
+  </section>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
