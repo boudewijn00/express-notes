@@ -1,7 +1,7 @@
 module.exports = {
     isArticlesFolder: (folder) => folder.title === 'articles',
     isEqual: (arg1, arg2) => arg1 === arg2,
-    showFolder: () => true,
+    showFolder: (folder) => folder.title !== 'articles',
     markdown: (content) => {        
         html = require('markdown-it')({
             html: true,
