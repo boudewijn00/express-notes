@@ -1,6 +1,7 @@
 $purple: #86697c;
 $pink: #fa7c91;
 $brown: #757763;
+$beige: #94938b;
 $beige-light: #d0d1cd;
 $beige-lighter: #eff0eb;
 
@@ -13,9 +14,15 @@ $beige-lighter: #eff0eb;
   $button-active-color: $brown,
   $grey-dark: $brown,
   $grey-light: $beige-light,
-  $primary: $purple,
+  $primary: $beige,
   $link: $pink,
   $control-border-width: 2px,
   $input-shadow: none,
   $title-color: $brown
 );
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: $beige;
+}
