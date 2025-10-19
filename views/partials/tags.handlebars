@@ -1,11 +1,9 @@
-<ul>
+<div class="box">
 {{#each tags}}
-    <li>
-        {{#if (isEqual this @root.queryTag)}}
-            <a aria-label="active tag link" class="has-text-weight-bold" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
-        {{else}}
-            <a aria-label="tag link" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
-        {{/if}}
-    </li>
+    {{#if (isEqual this @root.queryTag)}}
+        <a aria-label="active tag link" class="has-text-weight-bold button mb-2" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
+    {{else}}
+        <a aria-label="tag link" class="button mb-2" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
+    {{/if}}
 {{/each}}
-</ul>
+</div>

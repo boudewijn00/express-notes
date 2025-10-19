@@ -42,7 +42,7 @@
 </head>
 
 <body>
-  <nav class="navbar is-hidden-desktop" role="navigation" aria-label="main navigation">
+  <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a aria-label="home" class="navbar-item" href="/">
         <img alt="home icon" src="/home.png" width="28" height="28">
@@ -54,7 +54,7 @@
       </a>
     </div>
     {{#if folders }}
-    <div class="navbar-menu" id="menuItems">
+    <div class="navbar-menu is-hidden-desktop" id="menuItems">
       <aside class="menu">
         <ul class="menu-list">
           {{#folders}}
@@ -70,26 +70,21 @@
 
   <section class="section">
     <div class="container">
-      <div class="home-icon-desktop is-hidden-touch">
-        <a aria-label="home" class="navbar-item" href="/">
-          <img alt="home icon" src="/home.png" width="28" height="28">
-        </a>
-      </div>
       <div class="columns">
         <div class="column is-one-quarter is-hidden-touch">
           {{#if folders}}
           <aside class="menu">
             <ul class="menu-list">
               {{#folders}}
-              {{#if (showFolder this) }}
-              <li><a href="/folders/{{folder_id}}">{{title}}</a></li>
-              {{/if}}
+                {{#if (showFolder this) }}
+                  <li><a href="/folders/{{folder_id}}">{{title}}</a></li>
+                {{/if}}
               {{/folders}}
             </ul>
           </aside>
           {{/if}}
         </div>
-        <div class="column">
+        <div class="column is-three-quarters">
           {{{body}}}
         </div>
       </div>
