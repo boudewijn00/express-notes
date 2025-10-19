@@ -1,9 +1,14 @@
 <div class="box">
+<h1 class="title is-4 is-capitalized"><a href="/folders/{{folder.folder_id}}">{{folder.title}}</a></h1>
 {{#each tags}}
     {{#if (isEqual this @root.queryTag)}}
-        <a aria-label="active tag link" class="has-text-weight-bold button mb-2" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
+        <span class="tag is-primary is-medium mb-1">
+            <a class="has-text-white" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
+        </span>
     {{else}}
-        <a aria-label="tag link" class="button mb-2" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
+        <span class="tag is-light is-medium mb-1">
+            <a href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
+        </span>
     {{/if}}
 {{/each}}
 </div>

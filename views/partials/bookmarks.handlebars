@@ -1,25 +1,25 @@
 {{#each notes}}
     <div class="box">
-    <p class="title is-4">{{@key}}</p>
-    <ul>
-    {{#each this}}
-        <li class="block">
-            <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
-            {{#if this.link_excerpt}}
-                <p>{{truncateWords this.link_excerpt 100}}</p>
-            {{/if}}
-            {{#if this.link_by_line}}
-                <p><b>{{this.link_by_line}}</b></p>
-            {{/if}}
-            {{#if this.tags}}
-                <div class="tags" style="margin-top:5px">
-                {{#each this.tags}}
-                    <span class="tag is-light">{{this}}</span>
-                {{/each}}
-                </div>
-            {{/if}}
-        </li>
-    {{/each}}
-    </ul>
+        <p class="title is-5">{{@key}}</p>
+        <ul>
+        {{#each this}}
+            <li class="block">
+                <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
+                {{#if this.link_excerpt}}
+                    <p>{{truncateWords this.link_excerpt 100}}</p>
+                {{/if}}
+                {{#if this.link_by_line}}
+                    <p><b>{{this.link_by_line}}</b></p>
+                {{/if}}
+                {{#if this.tags}}
+                    <div class="tags" style="margin-top:5px">
+                    {{#each this.tags}}
+                        <span class="tag is-light">{{this}}</span>
+                    {{/each}}
+                    </div>
+                {{/if}}
+            </li>
+        {{/each}}
+        </ul>
     </div>
 {{/each}}
