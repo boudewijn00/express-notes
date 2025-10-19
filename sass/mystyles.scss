@@ -1,13 +1,21 @@
-@charset "utf-8";
-@import "../node_modules/bulma/bulma.sass";
+$purple: #86697c;
+$pink: #fa7c91;
+$brown: #757763;
+$beige-light: #d0d1cd;
+$beige-lighter: #eff0eb;
 
-body {
-  background-color: $code-background;
-  font-family: $family-monospace;
-}
-
-.home-icon-desktop {
-  /* This mimics the horizontal padding of a bulma .column to align the icon */
-  padding: 0 0.75rem;
-}
-
+// Path to Bulma's sass folder
+@use "bulma/sass" with (
+  $family-primary: '"Nunito", sans-serif',
+  $body-background-color: $beige-lighter,
+  $box-background-color: white,
+  $navbar-background-color: white,
+  $button-active-color: $brown,
+  $grey-dark: $brown,
+  $grey-light: $beige-light,
+  $primary: $purple,
+  $link: $pink,
+  $control-border-width: 2px,
+  $input-shadow: none,
+  $title-color: $brown
+);
