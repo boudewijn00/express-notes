@@ -3,7 +3,7 @@
         <p class="title is-5">{{@key}}</p>
         <ul>
         {{#each this}}
-            <li class="block">
+            <li class="block content is-normal">
                 <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
                 {{#if this.link_excerpt}}
                     <p>{{truncateWords this.link_excerpt 100}}</p>
