@@ -18,6 +18,7 @@ app.use(express.static('public'));
 require('dotenv').config();
 
 const axios = require('axios');
+const { has } = require('markdown-it/lib/common/utils.mjs');
 const config = {
     headers: {
         'Authorization': process.env.POSTGREST_TOKEN,
@@ -77,7 +78,7 @@ const getNoteByNoteId = async (id) => {
 const searchNotes = async (query) => {
     const response = await axios.get(`https://${process.env.POSTGREST_HOST}/notes?link_excerpt_tsv=plfts(english).${query}&order=created_time.desc`, config);
 
-    return replaceResourceTitleByImageTag(response.data);
+    return response.data;
 };
 
 const getTagsFromNotes = (notes) => {
@@ -127,33 +128,17 @@ app.get('/', (req, res) => {
 app.get('/search', (req, res) => {
     const query = req.query.q;
 
-    getFolders().then((folders) => {
-        if (!query) {
-            res.render('search', {
-                layout: 'main',
-                folders: folders,
-                query: query
-            });
-        } else {
-            searchNotes(query).then((notes) => {
-                const groupedNotes = groupNotesByDate(notes);
-                res.render('search', {
-                    layout: 'main',
-                    folders: folders,
-                    notes: groupedNotes,
-                    query: query,
-                    hasResults: Object.keys(groupedNotes).length > 0
-                });
-            }).catch((error) => {
-                res.render('error', {
-                    layout : 'main',
-                    folders: folders
-                });
-            });
-        }
+    searchNotes(query).then((notes) => {
+        res.render('search', {
+            layout: 'main',
+            notes: notes,
+            query: query,
+            hasResults: notes.length > 0
+        });
     }).catch((error) => {
         res.render('error', {
-            layout : 'main'
+            layout : 'main',
+            folders: folders
         });
     });
 });

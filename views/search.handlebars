@@ -1,32 +1,25 @@
-<h1>Search</h1>
-
+<div class="box">
 <form action="/search" method="GET" class="mb-4">
   <div class="field has-addons">
     <div class="control is-expanded">
       <input class="input" type="search" name="q" placeholder="Search..." value="{{query}}">
     </div>
     <div class="control">
-      <button type="submit" class="button is-info">
+      <button type="submit" class="button is-primary">
         Search
       </button>
     </div>
   </div>
 </form>
 
-{{#if query}}
-  <hr>
-  <h2>Results for "{{query}}"</h2>
-{{/if}}
-
 {{#if hasResults}}
     {{#each notes}}
         <div class="content">
-            <h3>{{@key}}</h3>
-            {{> articles notes=this}}
+            <p>{{this.title}}</p>
         </div>
     {{/each}}
 {{else}}
     {{#if query}}
         <p>No results found.</p>
     {{/if}}
-{{/if}}
+{{/if}}</div>
