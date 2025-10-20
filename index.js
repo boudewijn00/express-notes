@@ -18,7 +18,7 @@ app.use(express.static('public'));
 require('dotenv').config();
 
 const axios = require('axios');
-const { has } = require('markdown-it/lib/common/utils.mjs');
+
 const config = {
     headers: {
         'Authorization': process.env.POSTGREST_TOKEN,
