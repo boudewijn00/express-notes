@@ -138,11 +138,10 @@ app.get('/search', (req, res) => {
         }
 
         searchNotes(query).then((notes) => {
-            const groupedNotes = groupNotesByDate(notes);
             res.render('search', {
                 layout: 'main',
                 folders: folders,
-                notes: groupedNotes,
+                notes: notes,
                 query: query,
                 hasResults: notes.length > 0
             });

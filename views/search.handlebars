@@ -11,15 +11,16 @@
     </div>
   </div>
 </form>
+</div>
 
 {{#if hasResults}}
     {{#each notes}}
-        <div class="content">
-            <p>{{this.title}}</p>
-        </div>
+      <div class="box">
+          {{> bookmark this}}
+      </div>
     {{/each}}
 {{else}}
     {{#if query}}
         <p>No results found.</p>
     {{/if}}
-{{/if}}</div>
+{{/if}}
