@@ -7,7 +7,7 @@ $beige-lighter: #eff0eb;
 
 // Path to Bulma's sass folder
 @use "bulma/sass" with (
-  $family-primary: '"Nunito", sans-serif',
+  $family-primary: 'monospace',
   $body-background-color: $beige-lighter,
   $box-background-color: white,
   $navbar-background-color: white,
@@ -20,9 +20,3 @@ $beige-lighter: #eff0eb;
   $input-shadow: none,
   $title-color: $brown
 );
-
-p {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: $beige;
-}
