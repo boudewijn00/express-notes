@@ -30,6 +30,7 @@ function replaceResourceTitleByImageTag(notes) {
     for (const i in notes) {
         const promise = (async () => {
             const note = notes[i];
+            note.body = note.body || '';
             const regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/g;
             const matches = note.body.matchAll(regex);
 
