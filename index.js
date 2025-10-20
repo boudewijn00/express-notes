@@ -128,17 +128,33 @@ app.get('/', (req, res) => {
 app.get('/search', (req, res) => {
     const query = req.query.q;
 
-    searchNotes(query).then((notes) => {
-        res.render('search', {
-            layout: 'main',
-            notes: notes,
-            query: query,
-            hasResults: notes.length > 0
+    getFolders().then((folders) => {
+        if (!query) {
+            return res.render('search', {
+                layout: 'main',
+                folders: folders,
+                query: query
+            });
+        }
+
+        searchNotes(query).then((notes) => {
+            const groupedNotes = groupNotesByDate(notes);
+            res.render('search', {
+                layout: 'main',
+                folders: folders,
+                notes: groupedNotes,
+                query: query,
+                hasResults: notes.length > 0
+            });
+        }).catch((error) => {
+            res.render('error', {
+                layout : 'main',
+                folders: folders
+            });
         });
     }).catch((error) => {
         res.render('error', {
-            layout : 'main',
-            folders: folders
+            layout : 'main'
         });
     });
 });
