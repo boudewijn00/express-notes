@@ -18,6 +18,7 @@ app.use(express.static('public'));
 require('dotenv').config();
 
 const axios = require('axios');
+const { has } = require('markdown-it/lib/common/utils.mjs');
 const config = {
     headers: {
         'Authorization': process.env.POSTGREST_TOKEN,
@@ -30,6 +31,7 @@ function replaceResourceTitleByImageTag(notes) {
     for (const i in notes) {
         const promise = (async () => {
             const note = notes[i];
+            note.body = note.body || '';
             const regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/g;
             const matches = note.body.matchAll(regex);
 
@@ -73,6 +75,12 @@ const getNoteByNoteId = async (id) => {
     return replaceResourceTitleByImageTag(response.data);
 };
 
+const searchNotes = async (query) => {
+    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/notes?link_excerpt_tsv=plfts(english).${query}&order=created_time.desc`, config);
+
+    return response.data;
+};
+
 const getTagsFromNotes = (notes) => {
     const result = notes.flatMap((note) => {
         return note.tags;
@@ -108,6 +116,39 @@ app.get('/', (req, res) => {
                 layout : 'main', 
                 folders: folders,
                 note: notes[0],
+            });
+        });
+    }).catch((error) => {
+        res.render('error', {
+            layout : 'main'
+        });
+    });
+});
+
+app.get('/search', (req, res) => {
+    const query = req.query.q;
+
+    getFolders().then((folders) => {
+        if (!query) {
+            return res.render('search', {
+                layout: 'main',
+                folders: folders,
+                query: query
+            });
+        }
+
+        searchNotes(query).then((notes) => {
+            res.render('search', {
+                layout: 'main',
+                folders: folders,
+                notes: notes,
+                query: query,
+                hasResults: notes.length > 0
+            });
+        }).catch((error) => {
+            res.render('error', {
+                layout : 'main',
+                folders: folders
             });
         });
     }).catch((error) => {
