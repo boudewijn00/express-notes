@@ -115,7 +115,7 @@ app.get('/', (req, res) => {
             res.render('home', {
                 layout : 'main', 
                 folders: folders,
-                note: notes[0] || {},
+                note: notes[0] || { title: '', body: '' },
             });
         });
     }).catch((error) => {
