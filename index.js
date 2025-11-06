@@ -49,11 +49,20 @@ function replaceResourceTitleByImageTag(notes) {
     return Promise.all(promises);
 }
 
+function processLinkImages(notes) {
+    return notes.map(note => {
+        if (note.link_image && !note.link_image.startsWith('http')) {
+            note.link_image = null;
+        }
+        return note;
+    });
+}
+
 const getNotes = async (folderId) => {
     const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?parent_id=eq.${folderId}&order=created_time.desc&note_id=neq.${homeArticle}`, config);
     
     return replaceResourceTitleByImageTag(response.data).then(results => {   
-        return results;
+        return processLinkImages(results);
     });
 };
 
@@ -72,13 +81,13 @@ const getFolder = async (id) => {
 const getNoteByNoteId = async (id) => {
     const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?note_id=eq.${id}`, config);
 
-    return replaceResourceTitleByImageTag(response.data);
+    return replaceResourceTitleByImageTag(response.data).then(notes => processLinkImages(notes));
 };
 
 const searchNotes = async (query) => {
     const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?link_excerpt_tsv=plfts(english).${query}&order=created_time.desc`, config);
 
-    return response.data;
+    return processLinkImages(response.data);
 };
 
 const getTagsFromNotes = (notes) => {
