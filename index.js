@@ -36,7 +36,7 @@ function replaceResourceTitleByImageTag(notes) {
             const matches = note.body.matchAll(regex);
 
             for (const matched of matches) {
-                const response = await axios.get(`https://${process.env.POSTGREST_HOST}/resources?title=eq.${matched[1]}`, config);
+                const response = await axios.get(`${process.env.POSTGREST_HOST}/resources?title=eq.${matched[1]}`, config);
                 note.body = note.body.replace(matched[0], `<img src="data:image/png;base64,${response.data[0].contents}" />`);
             }
 
@@ -50,7 +50,7 @@ function replaceResourceTitleByImageTag(notes) {
 }
 
 const getNotes = async (folderId) => {
-    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/notes?parent_id=eq.${folderId}&order=created_time.desc&note_id=neq.${homeArticle}`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?parent_id=eq.${folderId}&order=created_time.desc&note_id=neq.${homeArticle}`, config);
     
     return replaceResourceTitleByImageTag(response.data).then(results => {   
         return results;
@@ -58,25 +58,25 @@ const getNotes = async (folderId) => {
 };
 
 const getFolders = async () => {
-    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/folders?order=title`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/folders?order=title`, config);
     
     return response.data;
 };
 
 const getFolder = async (id) => {
-    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/folders?folder_id=eq.${id}`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/folders?folder_id=eq.${id}`, config);
 
     return response.data[0];
 };
 
 const getNoteByNoteId = async (id) => {
-    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/notes?note_id=eq.${id}`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?note_id=eq.${id}`, config);
 
     return replaceResourceTitleByImageTag(response.data);
 };
 
 const searchNotes = async (query) => {
-    const response = await axios.get(`https://${process.env.POSTGREST_HOST}/notes?link_excerpt_tsv=plfts(english).${query}&order=created_time.desc`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?link_excerpt_tsv=plfts(english).${query}&order=created_time.desc`, config);
 
     return response.data;
 };
