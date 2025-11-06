@@ -111,11 +111,11 @@ const filterNotesByTag = (notes, tag) => {
 app.get('/', (req, res) => {
     const tags = req.query.tags;
     getFolders().then((folders) => {
-        getNoteByNoteId(homeArticle).then((notes) => { 
+        getNoteByNoteId(homeArticle).then((notes) => {
             res.render('home', {
                 layout : 'main', 
                 folders: folders,
-                note: notes[0],
+                note: notes[0] || {},
             });
         });
     }).catch((error) => {
