@@ -1,6 +1,11 @@
 <div class="box">
     <div class="content is-normal">
         <h1 class="title has-text-primary is-capitalized">{{ note.title }}</h1>
+        {{#if note.link_image}}
+        <figure class="image">
+            <img src="{{note.link_image}}" alt="{{note.title}}">
+        </figure>
+        {{/if}}
         <p>{{{markdown note.body }}}</p>
     </div>
 </div>

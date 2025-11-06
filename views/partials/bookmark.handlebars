@@ -1,4 +1,9 @@
 <div class="block content is-normal">
+    {{#if this.link_image}}
+    <figure class="image">
+        <img src="{{this.link_image}}" alt="{{this.title}}">
+    </figure>
+    {{/if}}
     <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
     {{#if this.link_excerpt}}
         <p>{{truncateWords this.link_excerpt 100}}</p>

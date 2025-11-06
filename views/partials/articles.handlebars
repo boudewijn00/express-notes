@@ -4,6 +4,11 @@
         {{#each this}}
             <div class="content">
                 <h1 class="title">{{this.title}}</h1>
+                {{#if this.link_image}}
+                <figure class="image">
+                    <img src="{{this.link_image}}" alt="{{this.title}}">
+                </figure>
+                {{/if}}
                 {{{markdown this.body}}}
                 {{#if this.link_by_line}}
                     <p>Source: {{this.link_by_line}}</p>
