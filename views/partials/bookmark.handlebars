@@ -1,14 +1,7 @@
 <div class="block content is-normal">
     <div class="media">
-        {{#if this.link_image}}
-        <div class="media-left">
-            <figure class="image" style="width: 192px; height: 192px;">
-                <img src="{{this.link_image}}" alt="" style="filter: grayscale(1);">
-            </figure>
-        </div>
-        {{/if}}
         <div class="media-content">
-            <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
+            <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{#if this.link_favicon}}<img src="{{this.link_favicon}}" alt="" style="height: 1em; vertical-align: middle; margin-right: 0.5em;">{{/if}}{{this.title}}</a>
             {{#if this.link_excerpt}}
                 <p>{{truncateWords this.link_excerpt 100}}</p>
             {{/if}}
