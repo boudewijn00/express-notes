@@ -129,7 +129,8 @@ app.get('/', (req, res) => {
         });
     }).catch((error) => {
         res.render('error', {
-            layout : 'main'
+            layout : 'main',
+            error: error
         });
     });
 });
@@ -157,12 +158,14 @@ app.get('/search', (req, res) => {
         }).catch((error) => {
             res.render('error', {
                 layout : 'main',
-                folders: folders
+                folders: folders,
+                error: error
             });
         });
     }).catch((error) => {
         res.render('error', {
-            layout : 'main'
+            layout : 'main',
+            error: error
         });
     });
 });
@@ -186,7 +189,10 @@ app.get('/folders/:id', (req, res) => {
             });
         });
     }).catch((error) => {
-        res.send('an error occured');
+        res.render('error', {
+            layout : 'main',
+            error: error
+        });
     })
 });
 
