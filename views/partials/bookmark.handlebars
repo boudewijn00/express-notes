@@ -1,8 +1,8 @@
 <div class="block content is-normal">
     <div class="media">
         {{#if this.link_favicon}}
-        <div class="media-left">
-            <img src="{{this.link_favicon}}" alt="" style="height: 1.25em; filter: grayscale(100%); margin-top: 0.25em;">
+        <div class="media-left" style="display: flex; align-items: center; gap: 0.5em;">
+            <img src="{{this.link_favicon}}" alt="" style="height: 1.25em; filter: grayscale(100%);">
             <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
         </div>
         {{/if}}
