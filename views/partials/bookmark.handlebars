@@ -1,12 +1,12 @@
 <div class="block content is-normal">
     <div class="media">
         <div class="media-content">
-            <div style="display: flex; align-items: flex-start; gap: 0.5em;">
+            <p style="display: flex; align-items: flex-start; gap: 0.5em;">
                 {{#if this.link_favicon}}
                     <img src="{{this.link_favicon}}" alt="" style="height: 1.25em; width: 1.25em; filter: grayscale(100%); margin-top: 0.15em;">
                 {{/if}}
                 <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
-            </div>
+            </p>
             {{#if this.link_excerpt}}
                 <p>{{truncateWords this.link_excerpt 100}}</p>
             {{/if}}
@@ -14,7 +14,7 @@
                 <p><b>{{this.link_by_line}}</b></p>
             {{/if}}
             {{#if this.tags}}
-                <div class="tags" style="margin-top:5px">
+                <div class="tags">
                 {{#each this.tags}}
                     <span class="tag is-light has-text-primary">{{this}}</span>
                 {{/each}}
