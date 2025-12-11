@@ -15,3 +15,22 @@
         </div>
     </div>
 </div>
+
+<div class="box">
+    <h2 class="title is-4">Recent Notes</h2>
+    <hr/>
+    {{#if recentNotes}}
+        {{#each recentNotes}}
+            <div class="block">
+                <p class="is-size-5">
+                    <a href="/folders/{{this.parent_id}}"><strong>{{this.title}}</strong></a>
+                </p>
+                <div class="content">
+                    {{{markdown (truncateWords this.body 30)}}}
+                </div>
+            </div>
+        {{/each}}
+    {{else}}
+        <p>No recent notes found.</p>
+    {{/if}}
+</div>

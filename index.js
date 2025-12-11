@@ -66,6 +66,14 @@ const getNotes = async (folderId) => {
     });
 };
 
+const getRecentNotes = async () => {
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?order=created_time.desc&limit=5&note_id=neq.${homeArticle}`, config);
+
+    return replaceResourceTitleByImageTag(response.data).then(results => {
+        return processLinkImages(results);
+    });
+};
+
 const getFolders = async () => {
     const response = await axios.get(`${process.env.POSTGREST_HOST}/folders?order=title`, config);
     
@@ -120,13 +128,16 @@ const filterNotesByTag = (notes, tag) => {
 
 app.get('/', (req, res) => {
     const tags = req.query.tags;
-    getFolders().then((folders) => {
-        getNoteByNoteId(homeArticle).then((notes) => {
-            res.render('home', {
-                layout : 'main', 
-                folders: folders,
-                note: notes[0] || { title: '', body: '' },
-            });
+    Promise.all([
+        getFolders(),
+        getNoteByNoteId(homeArticle),
+        getRecentNotes(),
+    ]).then(([folders, notes, recentNotes]) => {
+        res.render('home', {
+            layout : 'main', 
+            folders: folders,
+            note: notes[0] || { title: '', body: '' },
+            recentNotes: recentNotes,
         });
     }).catch((error) => {
         res.render('error', {
