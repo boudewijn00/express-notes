@@ -40,19 +40,29 @@ body {
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: url('/circuit-board.svg');
-        opacity: 0.1;
+        background-image: url('/diagonal-lines.svg');
+        opacity: 0.2;
         z-index: -1;
     }
 }
 
-.is-hidden-touch.menu {
-    background-color: white;
-    padding: 1rem;
-    border-radius: 6px;
+.is-hidden-touch aside.menu ul.menu-list li a {
+    padding: 0.5rem;
+}
 
-    .menu-list a {
-        background-color: $beige-lighter;
-        text-transform: capitalize;
-    }
+aside.menu ul.menu-list li a::first-letter {
+    text-transform: uppercase;
+}
+
+.is-hidden-touch aside.menu ul.menu-list li a.is-active {
+    font-weight: 600;
+}
+
+.is-hidden-touch aside.menu ul {
+    background-color: white;
+    padding: 0.5rem;
+}
+
+.navbar {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 }
