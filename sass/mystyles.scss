@@ -46,8 +46,12 @@ body {
     }
 }
 
-.menu {
+.menu.is-hidden-touch {
     background-color: white;
     padding: 1rem;
     border-radius: 6px;
+
+    .menu-list a {
+        background-color: $beige-lighter;
+    }
 }
