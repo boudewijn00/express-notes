@@ -3,10 +3,11 @@
         {{#if this.link_favicon}}
         <div class="media-left">
             <img src="{{this.link_favicon}}" alt="" style="height: 1.25em; filter: grayscale(100%); margin-top: 0.25em;">
+            <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
         </div>
         {{/if}}
-        <div class="media-content">
-            <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
+    </div>
+    <div class="media-content">
             {{#if this.link_excerpt}}
                 <p>{{truncateWords this.link_excerpt 100}}</p>
             {{/if}}
@@ -21,5 +22,4 @@
                 </div>
             {{/if}}
         </div>
-    </div>
 </div>
