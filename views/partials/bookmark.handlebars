@@ -1,25 +1,25 @@
 <div class="block content is-normal">
     <div class="media">
-        <div class="media-left" style="display: flex; align-items: center; gap: 0.5em;">
-            {{#if this.link_favicon}}
-                <img src="{{this.link_favicon}}" alt="" style="height: 1.25em; filter: grayscale(100%);">
-            {{/if}}
-            <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
-        </div>
-    </div>
-    <div class="media-content">
-        {{#if this.link_excerpt}}
-            <p>{{truncateWords this.link_excerpt 100}}</p>
-        {{/if}}
-        {{#if this.link_by_line}}
-            <p><b>{{this.link_by_line}}</b></p>
-        {{/if}}
-        {{#if this.tags}}
-            <div class="tags" style="margin-top:5px">
-            {{#each this.tags}}
-                <span class="tag is-light has-text-primary">{{this}}</span>
-            {{/each}}
+        <div class="media-content">
+            <div style="display: flex; align-items: center; gap: 0.5em;">
+                {{#if this.link_favicon}}
+                    <img src="{{this.link_favicon}}" alt="" style="height: 1.25em; filter: grayscale(100%);">
+                {{/if}}
+                <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
             </div>
-        {{/if}}
+            {{#if this.link_excerpt}}
+                <p>{{truncateWords this.link_excerpt 100}}</p>
+            {{/if}}
+            {{#if this.link_by_line}}
+                <p><b>{{this.link_by_line}}</b></p>
+            {{/if}}
+            {{#if this.tags}}
+                <div class="tags" style="margin-top:5px">
+                {{#each this.tags}}
+                    <span class="tag is-light has-text-primary">{{this}}</span>
+                {{/each}}
+                </div>
+            {{/if}}
+        </div>
     </div>
 </div>
