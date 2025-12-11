@@ -100,7 +100,8 @@ const getTagsFromNotes = (notes) => {
 
 const groupNotesByDate = (notes) => {
     const grouped = notes.reduce((r, a) => {
-        r[new Date(a.created_time).toLocaleDateString('us', 'US')] = [...r[new Date(a.created_time).toLocaleDateString('us', 'US')] || [], a];
+        const date = new Date(a.created_time).toISOString().split('T')[0];
+        r[date] = [...r[date] || [], a];
         
         return r;
     }, {});

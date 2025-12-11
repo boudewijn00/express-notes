@@ -77,7 +77,7 @@
         <div class="column is-one-quarter is-hidden-touch">
           {{#if folders}}
           <aside class="menu">
-            <ul>
+            <ul class="menu-list">
               {{#folders}}
                 {{#if (showFolder this) }}
                   <li><a href="/folders/{{folder_id}}"{{#if (isEqual ../folder.folder_id folder_id)}} class="is-active"{{/if}}>{{title}}</a></li>

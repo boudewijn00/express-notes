@@ -8,7 +8,7 @@ $beige-lighter: #eff0eb;
 // Path to Bulma's sass folder
 @use "bulma/sass" with (
   $family-primary: 'DM Sans',
-  $body-background-color: $beige-lighter,
+  $body-background-color: transparent,
   $box-background-color: white,
   $navbar-background-color: white,
   $button-active-color: $brown,
@@ -19,9 +19,54 @@ $beige-lighter: #eff0eb;
   $control-border-width: 2px,
   $input-shadow: none,
   $title-color: $brown,
-  $box-radius: 0.5rem,
+  $box-radius: 0rem,
   $box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1),
   $title-weight: 400,
 );
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+html {
+    background-color: $beige-lighter;
+}
+
+body {
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('/diagonal-lines.svg');
+        opacity: 0.2;
+        z-index: -1;
+    }
+}
+
+.is-hidden-touch aside.menu ul.menu-list li a {
+    padding: 0.5rem;
+}
+
+aside.menu ul.menu-list li a::first-letter {
+    text-transform: uppercase;
+}
+
+.is-hidden-touch aside.menu ul.menu-list li a.is-active {
+    font-weight: 600;
+}
+
+.is-hidden-touch aside.menu ul {
+    background-color: white;
+    padding: 0.5rem;
+}
+
+.navbar {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.bookmark-title-container + .tags {
+    margin-top: 1rem;
+}
