@@ -21,14 +21,7 @@
     <hr/>
     {{#if recentNotes}}
         {{#each recentNotes}}
-            <div class="block">
-                <p class="is-size-5">
-                    <a href="/folders/{{this.parent_id}}"><strong>{{this.title}}</strong></a>
-                </p>
-                <div class="content">
-                    {{{markdown (truncateWords this.body 30)}}}
-                </div>
-            </div>
+            {{> bookmark this}}
         {{/each}}
     {{else}}
         <p>No recent notes found.</p>
