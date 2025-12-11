@@ -8,10 +8,22 @@
         </div>
         {{/if}}
         <div class="media-content">
-            <div class="content is-normal">
-                <h1 class="title has-text-primary is-capitalized">{{ note.title }}</h1>
+            <div>
+                <h1 class="title is-2">{{ note.title }}</h1>
                 <p>{{{markdown note.body }}}</p>
             </div>
         </div>
     </div>
+</div>
+
+<div class="box">
+    <h2 class="title is-4">Recent Notes</h2>
+    <hr/>
+    {{#if recentNotes}}
+        {{#each recentNotes}}
+            {{> bookmark this}}
+        {{/each}}
+    {{else}}
+        <p>No recent notes found.</p>
+    {{/if}}
 </div>
