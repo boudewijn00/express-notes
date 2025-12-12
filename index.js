@@ -117,6 +117,18 @@ const groupNotesByDate = (notes) => {
     return grouped;
 }
 
+const groupNotesByMonth = (notes) => {
+    const grouped = notes.reduce((r, a) => {
+        const date = new Date(a.created_time);
+        const key = date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+        r[key] = [...r[key] || [], a];
+        
+        return r;
+    }, {});
+
+    return grouped;
+}
+
 const filterNotesByTag = (notes, tag) => {
     if(!tag) return notes;
     const result = notes.filter((note) => {
@@ -194,7 +206,7 @@ app.get('/folders/:id', (req, res) => {
                     folders: folders,
                     folder: folder,
                     tags: getTagsFromNotes(notes),
-                    notes: groupNotesByDate(filteredNotesByTag),
+                    notes: groupNotesByMonth(filteredNotesByTag),
                     queryTag: queryTag,
                     url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
                 });
