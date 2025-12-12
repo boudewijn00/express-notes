@@ -196,8 +196,20 @@ app.get('/search', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-    res.render('about', {
-        layout : 'main'
+    Promise.all([
+        getFolders(),
+        getNotes(articlesFolder),
+    ]).then(([folders, notes]) => {
+        res.render('about', {
+            layout : 'main',
+            folders: folders,
+            notes: groupNotesByMonth(notes)
+        });
+    }).catch((error) => {
+        res.render('error', {
+            layout : 'main',
+            error: error
+        });
     });
 });
 
