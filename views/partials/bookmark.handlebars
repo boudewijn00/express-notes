@@ -5,16 +5,10 @@
                 {{#if this.link_favicon}}
                     <img src="{{this.link_favicon}}" alt="" style="height: 1.25em; width: 1.25em; filter: grayscale(100%); margin-top: 0.15em;">
                 {{/if}}
-                {{#if this.link_excerpt}}
-                    <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
-                {{else}}
-                    <a class="is-underlined" href="/folders/{{this.parent_id}}">{{this.title}}</a>
-                {{/if}}
+                <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
             </div>
             {{#if this.link_excerpt}}
                 <p>{{truncateWords this.link_excerpt 100}}</p>
-            {{else}}
-                {{{markdown (truncateWords this.body 30)}}}
             {{/if}}
             {{#if this.link_by_line}}
                 <p><b>{{this.link_by_line}}</b></p>
