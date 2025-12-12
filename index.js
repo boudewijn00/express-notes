@@ -197,9 +197,10 @@ app.get('/search', (req, res) => {
 
 app.get('/about', (req, res) => {
     getNotes(articlesFolder).then((notes) => {
+        const filteredNotes = notes.filter(note => note.note_id !== homeArticle);
         res.render('about', {
             layout : 'main',
-            notes: groupNotesByMonth(notes)
+            notes: groupNotesByMonth(filteredNotes)
         });
     }).catch((error) => {
         res.render('error', {
