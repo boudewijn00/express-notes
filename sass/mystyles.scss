@@ -50,10 +50,8 @@ body {
     border: none;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
     border-radius: 0rem;
-}
-
-.is-hidden-touch aside.menu ul.menu-list li a {
-    padding: 0.5rem;
+    background-color: white;
+    padding: 1rem;
 }
 
 aside.menu ul.menu-list li a::first-letter {
@@ -62,11 +60,6 @@ aside.menu ul.menu-list li a::first-letter {
 
 .is-hidden-touch aside.menu ul.menu-list li a.is-active {
     font-weight: 600;
-}
-
-.is-hidden-touch aside.menu ul {
-    background-color: white;
-    padding: 0.5rem;
 }
 
 .navbar {

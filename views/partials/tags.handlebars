@@ -1,5 +1,5 @@
 <div class="box">
-    <h1 class="title is-4 is-capitalized ml-1"><a href="/folders/{{folder.folder_id}}">{{folder.title}}</a></h1>
+    <h1 class="title is-4 is-capitalized ml-1 has-text-dark">{{folder.title}}</h1>
     {{#each tags}}
         {{#if (isEqual this @root.queryTag)}}
             <span class="tag is-primary is-medium my-1 mr-1">

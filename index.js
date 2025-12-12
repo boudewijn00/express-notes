@@ -68,7 +68,7 @@ const getNotes = async (folderId) => {
 };
 
 const getRecentNotes = async () => {
-    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?order=created_time.desc&limit=5&note_id=neq.${homeArticle}`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?order=created_time.desc&limit=5&note_id=neq.${homeArticle}&parent_id=neq.${articlesFolder}`, config);
 
     return replaceResourceTitleByImageTag(response.data).then(results => {
         return processLinkImages(results);
