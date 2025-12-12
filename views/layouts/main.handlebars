@@ -77,8 +77,8 @@
   <section class="section">
     <div class="container">
       <div class="columns">
+        {{#if folders}}
         <div class="column is-one-quarter is-hidden-touch">
-          {{#if folders}}
           <aside class="menu">
             <ul class="menu-list">
               {{#folders}}
@@ -88,9 +88,9 @@
               {{/folders}}
             </ul>
           </aside>
-          {{/if}}
         </div>
-        <div class="column is-three-quarters">
+        {{/if}}
+        <div class="column {{#if folders}}is-three-quarters{{/if}}">
           {{{body}}}
         </div>
       </div>
