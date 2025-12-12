@@ -196,13 +196,9 @@ app.get('/search', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-    Promise.all([
-        getFolders(),
-        getNotes(articlesFolder),
-    ]).then(([folders, notes]) => {
+    getNotes(articlesFolder).then((notes) => {
         res.render('about', {
             layout : 'main',
-            folders: folders,
             notes: groupNotesByMonth(notes)
         });
     }).catch((error) => {
