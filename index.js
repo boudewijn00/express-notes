@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
+const articlesFolder = 'b7bc7b8a876e4254ad9865f91ddc8f70';
 
 const handlebars = require('express-handlebars');
 
@@ -185,6 +186,21 @@ app.get('/search', (req, res) => {
                 folders: folders,
                 error: error
             });
+        });
+    }).catch((error) => {
+        res.render('error', {
+            layout : 'main',
+            error: error
+        });
+    });
+});
+
+app.get('/about', (req, res) => {
+    getNotes(articlesFolder).then((notes) => {
+        const filteredNotes = notes.filter(note => note.note_id !== homeArticle);
+        res.render('about', {
+            layout : 'main',
+            notes: groupNotesByMonth(filteredNotes)
         });
     }).catch((error) => {
         res.render('error', {

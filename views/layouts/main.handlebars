@@ -50,6 +50,9 @@
       <a class="navbar-item is-size-5 has-text-primary" href="/search">
         Search
       </a>
+      <a class="navbar-item is-size-5 has-text-primary" href="/about">
+        Whats behind all this
+      </a>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="menuItems">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -74,8 +77,8 @@
   <section class="section">
     <div class="container">
       <div class="columns">
+        {{#if folders}}
         <div class="column is-one-quarter is-hidden-touch">
-          {{#if folders}}
           <aside class="menu">
             <ul class="menu-list">
               {{#folders}}
@@ -85,9 +88,9 @@
               {{/folders}}
             </ul>
           </aside>
-          {{/if}}
         </div>
-        <div class="column is-three-quarters">
+        {{/if}}
+        <div class="column {{#if folders}}is-three-quarters{{/if}}">
           {{{body}}}
         </div>
       </div>
