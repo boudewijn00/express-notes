@@ -120,7 +120,7 @@ const groupNotesByDate = (notes) => {
 const groupNotesByMonth = (notes) => {
     const grouped = notes.reduce((r, a) => {
         const date = new Date(a.created_time);
-        const key = date.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+        const key = `${date.getFullYear()} ${date.toLocaleString('en-US', { month: 'long' })}`;
         r[key] = [...r[key] || [], a];
         
         return r;
