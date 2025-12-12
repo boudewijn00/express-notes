@@ -194,6 +194,20 @@ app.get('/search', (req, res) => {
     });
 });
 
+app.get('/about', (req, res) => {
+    getFolders().then((folders) => {
+        res.render('about', {
+            layout : 'main', 
+            folders: folders,
+        });
+    }).catch((error) => {
+        res.render('error', {
+            layout : 'main',
+            error: error
+        });
+    });
+});
+
 app.get('/folders/:id', (req, res) => {
     const id = req.params.id;
     const queryTag = req.query.tag;
