@@ -28,7 +28,8 @@ module.exports = {
                 const newNote = {...note};
                 if (newNote.body) {
                     const parts = newNote.body.split('---');
-                    newNote.body = parts[0].trim();
+                    newNote.body = parts[0];
+                    newNote.body = newNote.body.replace(/\\/g, '');
                 }
                 return newNote;
             });
