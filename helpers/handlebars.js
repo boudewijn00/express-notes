@@ -28,8 +28,12 @@ module.exports = {
                 const newNote = {...note};
                 if (newNote.body) {
                     const parts = newNote.body.split('---');
-                    newNote.body = parts[0];
-                    newNote.body = newNote.body.replace(/\\/g, '');
+                    if (parts.length > 1) {
+                        const readMoreLink = ` <a href="/notes/${newNote.note_id}" target="_blank">Lees meer</a>`;
+                        newNote.body = parts[0].trim() + readMoreLink;
+                    } else {
+                        newNote.body = parts[0];
+                    }
                 }
                 return newNote;
             });
