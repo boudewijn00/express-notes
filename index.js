@@ -238,6 +238,41 @@ app.get('/folders/:id', (req, res) => {
     })
 });
 
+app.get('/notes/:id', (req, res) => {
+    const id = req.params.id;
+    let noteArray;
+
+    getNoteByNoteId(id)
+    .then(notes => {
+        if (!notes || notes.length === 0) {
+            throw new Error('Note not found');
+        }
+        noteArray = notes;
+        const note = noteArray[0];
+        return Promise.all([
+            getFolders(),
+            getFolder(note.parent_id),
+        ]);
+    })
+    .then(([folders, folder]) => {
+        res.render('notes', {
+            layout : 'main', 
+            folders: folders,
+            folder: folder,
+            tags: getTagsFromNotes(noteArray),
+            notes: groupNotesByMonth(noteArray),
+            queryTag: null,
+            url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+        });
+    })
+    .catch((error) => {
+        res.render('error', {
+            layout : 'main',
+            error: error
+        });
+    });
+});
+
 app.get('/sitemap.xml', (req, res) => {
     res.sendFile(`${__dirname}/sitemap.xml`);
 });
