@@ -20,15 +20,19 @@ module.exports = {
         return str;
     },
     prepareAboutNotes: (notes) => {
-        if (!notes) return [];
+        if (!notes) return {};
         
-        return notes.map(note => {
-            const newNote = {...note};
-            if (newNote.body) {
-                const parts = newNote.body.split('---');
-                newNote.body = parts[0];
-            }
-            return newNote;
-        });
+        const newNotesByMonth = {};
+        for (const month in notes) {
+            newNotesByMonth[month] = notes[month].map(note => {
+                const newNote = {...note};
+                if (newNote.body) {
+                    const parts = newNote.body.split('---');
+                    newNote.body = parts[0];
+                }
+                return newNote;
+            });
+        }
+        return newNotesByMonth;
     }
 }
