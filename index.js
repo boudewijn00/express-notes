@@ -255,7 +255,7 @@ app.get('/notes/:id', (req, res) => {
         ]);
     })
     .then(([folders, folder]) => {
-        res.render('notes', {
+        res.render('note', {
             layout : 'main', 
             folders: folders,
             folder: folder,
