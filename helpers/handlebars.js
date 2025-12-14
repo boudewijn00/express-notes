@@ -18,5 +18,16 @@ module.exports = {
             return words.slice(0, maxWords).join(' ') + '...';
         }
         return str;
+    },
+    prepareAboutNotes: (notes) => {
+        if (!notes) return [];
+        return notes.map(note => {
+            const newNote = {...note};
+            if (newNote.body) {
+                const parts = newNote.body.split('---');
+                newNote.body = parts[0];
+            }
+            return newNote;
+        });
     }
 }
