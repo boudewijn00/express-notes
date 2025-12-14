@@ -21,6 +21,7 @@ module.exports = {
     },
     prepareAboutNotes: (notes) => {
         if (!notes) return [];
+        
         return notes.map(note => {
             const newNote = {...note};
             if (newNote.body) {
