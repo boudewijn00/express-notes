@@ -29,12 +29,17 @@ module.exports = {
                 if (newNote.body) {
                     const parts = newNote.body.split('---');
                     if (parts.length > 1) {
-                        const readMoreLink = ` <a href="/notes/${newNote.note_id}" target="_blank">Lees meer</a>`;
+                        const readMoreLink = ` <a href="/notes/${newNote.note_id}">Read more</a>`;
                         newNote.body = parts[0].trim() + readMoreLink;
                     } else {
                         newNote.body = parts[0];
                     }
                 }
+
+                if (newNote.body) {
+                    newNote.body = newNote.body.replace(/\\/g, '');
+                }
+
                 return newNote;
             });
         }
