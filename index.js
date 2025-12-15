@@ -198,9 +198,11 @@ app.get('/search', (req, res) => {
 app.get('/about', (req, res) => {
     getNotes(articlesFolder).then((notes) => {
         const filteredNotes = notes.filter(note => note.note_id !== homeArticle);
+        const notesGroupedByMonth = groupNotesByMonth(filteredNotes);
+        
         res.render('about', {
             layout : 'main',
-            notes: groupNotesByMonth(filteredNotes)
+            notes: notesGroupedByMonth
         });
     }).catch((error) => {
         res.render('error', {
@@ -234,6 +236,37 @@ app.get('/folders/:id', (req, res) => {
             error: error
         });
     })
+});
+
+app.get('/notes/:id', (req, res) => {
+    const id = req.params.id;
+    let noteArray;
+
+    getNoteByNoteId(id)
+    .then(notes => {
+        if (!notes || notes.length === 0) {
+            throw new Error('Note not found');
+        }
+        noteArray = notes;
+        const note = noteArray[0];
+        return getFolder(note.parent_id);
+    })
+    .then((folder) => {
+        res.render('note', {
+            layout : 'main', 
+            folder: folder,
+            tags: getTagsFromNotes(noteArray),
+            notes: groupNotesByMonth(noteArray),
+            queryTag: null,
+            url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+        });
+    })
+    .catch((error) => {
+        res.render('error', {
+            layout : 'main',
+            error: error
+        });
+    });
 });
 
 app.get('/sitemap.xml', (req, res) => {
