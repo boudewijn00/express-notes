@@ -249,15 +249,11 @@ app.get('/notes/:id', (req, res) => {
         }
         noteArray = notes;
         const note = noteArray[0];
-        return Promise.all([
-            getFolders(),
-            getFolder(note.parent_id),
-        ]);
+        return getFolder(note.parent_id);
     })
-    .then(([folders, folder]) => {
+    .then((folder) => {
         res.render('note', {
             layout : 'main', 
-            folders: folders,
             folder: folder,
             tags: getTagsFromNotes(noteArray),
             notes: groupNotesByMonth(noteArray),
