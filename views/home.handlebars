@@ -22,7 +22,10 @@
         <hr/>
         {{#if recentNotes}}
             {{#each recentNotes}}
-                {{> bookmark this}}
+                <div class="block">
+                    {{> bookmark this}}
+                    <p class="is-size-7 has-text-grey has-text-right">{{formatDate this.created_time}}</p>
+                </div>
             {{/each}}
         {{else}}
             <p>No recent notes found.</p>
