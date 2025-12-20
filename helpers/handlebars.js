@@ -19,6 +19,14 @@ module.exports = {
         }
         return str;
     },
+    formatDate: (date) => {
+        if (!date) return '';
+        return new Date(date).toLocaleDateString('en-GB', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    },
     prepareAboutNotes: (notes) => {
         if (!notes) return {};
         
