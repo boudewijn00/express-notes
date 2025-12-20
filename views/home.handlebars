@@ -1,29 +1,31 @@
-<div class="box">
-    <div class="media">
-        {{#if note.link_image}}
-        <div class="media-left">
-            <figure class="image" style="width: 192px; height: 192px;">
-                <img src="{{note.link_image}}" alt="{{note.title}}" style="filter: grayscale(1);">
-            </figure>
-        </div>
-        {{/if}}
-        <div class="media-content">
-            <div>
-                <h1 class="title is-4 has-text-dark">{{ note.title }}</h1>
-                <p>{{{markdown note.body }}}</p>
+<div class="home-container">
+    <div class="box main-note-box">
+        <div class="media">
+            {{#if note.link_image}}
+            <div class="media-left">
+                <figure class="image" style="width: 192px; height: 192px;">
+                    <img src="{{note.link_image}}" alt="{{note.title}}" style="filter: grayscale(1);">
+                </figure>
+            </div>
+            {{/if}}
+            <div class="media-content">
+                <div>
+                    <h1 class="title is-4 has-text-dark">{{ note.title }}</h1>
+                    <p>{{{markdown note.body }}}</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="box">
-    <h2 class="title is-4 has-text-dark">Recent Notes</h2>
-    <hr/>
-    {{#if recentNotes}}
-        {{#each recentNotes}}
-            {{> bookmark this}}
-        {{/each}}
-    {{else}}
-        <p>No recent notes found.</p>
-    {{/if}}
+    <div class="box recent-notes-box">
+        <h2 class="title is-4 has-text-dark">Recent Notes</h2>
+        <hr/>
+        {{#if recentNotes}}
+            {{#each recentNotes}}
+                {{> bookmark this}}
+            {{/each}}
+        {{else}}
+            <p>No recent notes found.</p>
+        {{/if}}
+    </div>
 </div>

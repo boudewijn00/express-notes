@@ -69,3 +69,26 @@ aside.menu ul.menu-list li a::first-letter {
 .bookmark-title-container + .tags {
     margin-top: 1rem;
 }
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-note-box {
+    order: 2;
+}
+
+.recent-notes-box {
+    order: 1;
+}
+
+@media screen and (min-width: 769px) {
+    .main-note-box {
+        order: 1;
+    }
+
+    .recent-notes-box {
+        order: 2;
+    }
+}
