@@ -26,6 +26,7 @@
                     <p class="is-size-7 has-text-grey">{{formatDate this.created_time}}</p>
                     {{> bookmark this}}
                 </div>
+                {{#unless @last}}<hr/>{{/unless}}
             {{/each}}
         {{else}}
             <p>No recent notes found.</p>
