@@ -185,7 +185,7 @@ app.get('/search', (req, res) => {
             res.render('search', {
                 layout: 'main',
                 folders: folders,
-                notes: groupNotesByMonth(notes),
+                notes: notes,
                 query: query,
                 hasResults: notes.length > 0
             });
