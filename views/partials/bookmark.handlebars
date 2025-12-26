@@ -15,9 +15,16 @@
             {{/if}}
             {{#if this.tags}}
                 <div class="tags">
-                {{#each this.tags}}
-                    <span class="tag is-light has-text-primary">{{this}}</span>
-                {{/each}}
+                    {{#if this.folder}}
+                        <a href="/folders/{{this.folder.folder_id}}" class="tag is-link is-light">{{this.folder.title}}</a>
+                    {{/if}}
+                    {{#each this.tags}}
+                        <span class="tag is-light has-text-primary">{{this}}</span>
+                    {{/each}}
+                </div>
+            {{else if this.folder}}
+                <div class="tags">
+                    <a href="/folders/{{this.folder.folder_id}}" class="tag is-link is-light">{{this.folder.title}}</a>
                 </div>
             {{/if}}
         </div>
