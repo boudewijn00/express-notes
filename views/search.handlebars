@@ -15,9 +15,12 @@
 
 {{#if hasResults}}
     {{#each notes}}
-      <div class="box">
-          {{> bookmark this}}
-      </div>
+        <h2 class="title is-4 has-text-grey-dark">{{@key}}</h2>
+        {{#each this}}
+            <div class="box">
+                {{> bookmark this}}
+            </div>
+        {{/each}}
     {{/each}}
 {{else}}
     {{#if query}}

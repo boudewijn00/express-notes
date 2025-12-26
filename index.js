@@ -101,7 +101,11 @@ const getNoteByNoteId = async (id) => {
 const searchNotes = async (query) => {
     const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?link_excerpt_tsv=plfts(english).${query}&order=created_time.desc`, config);
 
-    return processLinkImages(response.data);
+    const notes = processLinkImages(response.data);
+    return Promise.all(notes.map(async note => {
+        note.folder = await getFolder(note.parent_id);
+        return note;
+    }));
 };
 
 const getTagsFromNotes = (notes) => {
@@ -181,7 +185,7 @@ app.get('/search', (req, res) => {
             res.render('search', {
                 layout: 'main',
                 folders: folders,
-                notes: notes,
+                notes: groupNotesByMonth(notes),
                 query: query,
                 hasResults: notes.length > 0
             });
