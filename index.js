@@ -172,29 +172,19 @@ app.get('/', (req, res) => {
 app.get('/search', (req, res) => {
     const query = req.query.q;
 
-    getFolders().then((folders) => {
-        if (!query) {
-            return res.render('search', {
-                layout: 'main',
-                folders: folders,
-                query: query
-            });
-        }
+    if (!query) {
+        return res.render('search', {
+            layout: 'main',
+            query: query
+        });
+    }
 
-        searchNotes(query).then((notes) => {
-            res.render('search', {
-                layout: 'main',
-                folders: folders,
-                notes: notes,
-                query: query,
-                hasResults: notes.length > 0
-            });
-        }).catch((error) => {
-            res.render('error', {
-                layout : 'main',
-                folders: folders,
-                error: error
-            });
+    searchNotes(query).then((notes) => {
+        res.render('search', {
+            layout: 'main',
+            notes: notes,
+            query: query,
+            hasResults: notes.length > 0
         });
     }).catch((error) => {
         res.render('error', {
