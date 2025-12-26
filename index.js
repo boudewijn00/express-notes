@@ -72,6 +72,11 @@ const getRecentNotes = async () => {
 
     return replaceResourceTitleByImageTag(response.data).then(results => {
         return processLinkImages(results);
+    }).then(notes => {
+        return Promise.all(notes.map(async note => {
+            note.folder = await getFolder(note.parent_id);
+            return note;
+        }));
     });
 };
 
