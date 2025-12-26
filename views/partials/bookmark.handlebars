@@ -10,6 +10,9 @@
             {{#if this.link_excerpt}}
                 <p>{{truncateWords this.link_excerpt 100}}</p>
             {{/if}}
+            {{#if this.created_time}}
+                <p class="has-text-grey is-size-7">{{formatDate this.created_time}}</p>
+            {{/if}}
             {{#if this.tags}}
                 <div class="tags">
                     {{#if this.folder}}
