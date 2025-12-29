@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="notes about web development" />
+  <meta name="keywords" content="php laravel nodejs serverless api databases hardware" />
+  <meta name=”robots” content=”index,follow” />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="msvalidate.01" content="CE98461C304B6DE7D7F18193EFEF9BB5" />
+  <title>Hello Data Notes</title>
+  <link rel="stylesheet" href="/mystyles.css">
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // Get all "navbar-burger" elements
+      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+      // Add a click event on each of them
+      $navbarBurgers.forEach(el => {
+        el.addEventListener('click', () => {
+
+          // Get the target from the "data-target" attribute
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+
+          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+
+        });
+      });
+
+    });
+  </script>
+  <style>
+    .content pre {
+      padding: 0em;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a aria-label="home" class="navbar-item" href="/">
+        <img alt="home icon" src="/home.png" width="28" height="28">
+      </a>
+      <a class="navbar-item is-size-5 has-text-primary" href="/search">
+        Search
+      </a>
+      <a class="navbar-item is-size-5 has-text-primary" href="/about">
+        Whats behind all this
+      </a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="menuItems">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    {{#if folders }}
+    <div class="navbar-menu is-hidden-desktop" id="menuItems">
+      <aside class="menu">
+        <ul class="menu-list">
+          {{#folders}}
+          {{#if (showFolder this) }}
+          <li><a href="/folders/{{folder_id}}"{{#if (isEqual ../folder.folder_id folder_id)}} class="is-active"{{/if}}>{{title}}</a></li>
+          {{/if}}
+          {{/folders}}
+        </ul>
+      </aside>
+    </div>
+    {{/if}}
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        {{#if folders}}
+        <div class="column is-one-quarter is-hidden-touch">
+          <aside class="menu">
+            <h2 class="title is-4 has-text-dark">Folders</h2>
+            <ul class="menu-list">
+              {{#folders}}
+                {{#if (showFolder this) }}
+                  <li><a href="/folders/{{folder_id}}"{{#if (isEqual ../folder.folder_id folder_id)}} class="is-active"{{/if}}>{{title}}</a></li>
+                {{/if}}
+              {{/folders}}
+            </ul>
+          </aside>
+        </div>
+        {{/if}}
+        <div class="column {{#if folders}}is-three-quarters{{/if}}">
+          {{{body}}}
+        </div>
+      </div>
+    </div>
+  </section>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+
+</html>

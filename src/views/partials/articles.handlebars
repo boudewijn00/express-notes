@@ -1,0 +1,15 @@
+{{#each notes}}
+    <div class="box">
+        <p class="title is-4">{{@key}}</p>
+        {{#each this}}
+            <div class="media">
+                <div class="media-content">
+                    <div class="content">
+                        <p class="title is-4 has-text-dark">{{this.title}}</p>
+                        {{{markdown this.body}}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+{{/each}}

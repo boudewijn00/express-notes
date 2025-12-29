@@ -1,0 +1,8 @@
+{{#each notes}}
+    <div class="box">
+        <p class="title is-4">{{@key}}</p>
+        {{#each this}}
+            {{> bookmark this}}
+        {{/each}}
+    </div>
+{{/each}}

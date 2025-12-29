@@ -1,0 +1,14 @@
+<div class="box">
+    <h1 class="title is-4 is-capitalized ml-1 has-text-dark">{{folder.title}}</h1>
+    {{#each tags}}
+        {{#if (isEqual this @root.queryTag)}}
+            <span class="tag is-primary is-medium my-1 mr-1">
+                <a class="has-text-white" href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
+            </span>
+        {{else}}
+            <span class="tag is-light is-medium my-1 mr-1">
+                <a href={{url}}{{folder.folder_id}}"?tag={{this}}">{{this}}</a>
+            </span>
+        {{/if}}
+    {{/each}}
+</div>
