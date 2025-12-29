@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const port = 3000;
 const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
@@ -13,8 +14,8 @@ app.engine('handlebars', handlebars.engine({
 }));
 
 app.set('view engine', 'handlebars');
-app.set('views', './views');
-app.use(express.static('public'));
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 require('dotenv').config();
 
@@ -266,10 +267,6 @@ app.get('/notes/:id', (req, res) => {
             error: error
         });
     });
-});
-
-app.get('/sitemap.xml', (req, res) => {
-    res.sendFile(`${__dirname}/sitemap.xml`);
 });
 
 app.listen(port, () => {

@@ -18,6 +18,9 @@
                     {{#if this.folder}}
                         <a href="/folders/{{this.folder.folder_id}}" class="tag is-link is-light">{{this.folder.title}}</a>
                     {{/if}}
+                    {{#if this.hacker_news_id}}
+                        <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning is-light" aria-label="Hacker News discussion">Hacker News</a>
+                    {{/if}}
                     {{#each this.tags}}
                         <span class="tag is-light has-text-primary">{{this}}</span>
                     {{/each}}
@@ -25,6 +28,13 @@
             {{else if this.folder}}
                 <div class="tags">
                     <a href="/folders/{{this.folder.folder_id}}" class="tag is-link is-light">{{this.folder.title}}</a>
+                    {{#if this.hacker_news_id}}
+                        <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning is-light" aria-label="Hacker News discussion">Hacker News</a>
+                    {{/if}}
+                </div>
+            {{else if this.hacker_news_id}}
+                <div class="tags">
+                    <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning is-light" aria-label="Hacker News discussion">Hacker News</a>
                 </div>
             {{/if}}
         </div>

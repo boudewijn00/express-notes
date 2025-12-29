@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "debug": "nodemon --inspect index.js",
-    "build:css": "sass -I node_modules sass/mystyles.scss public/mystyles.css --style=compressed",
-    "watch:css": "sass -I node_modules --watch sass/mystyles.scss public/mystyles.css --style=compressed"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "debug": "nodemon --inspect src/index.js",
+    "build:css": "sass -I node_modules src/sass/mystyles.scss public/mystyles.css --style=compressed",
+    "watch:css": "sass -I node_modules --watch src/sass/mystyles.scss public/mystyles.css --style=compressed"
   },
   "author": "",
   "license": "ISC",
