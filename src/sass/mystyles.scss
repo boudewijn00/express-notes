@@ -1,16 +1,23 @@
+// Light mode color palette
 $purple: #86697c;
-$pink: #fa7c91;
+$pink: hwb(350 49% 2%);
 $brown: #757763;
 $beige: #94938b;
 $beige-light: #d0d1cd;
 $beige-lighter: #eff0eb;
 
+// Dark mode color palette
+$purple-dark: #a68898;
+$pink-dark: #ff94a8;
+$brown-dark: #b8b89d;
+$beige-dark: #b5b4a9;
+$beige-light-dark: #8a8a7e;
+$beige-lighter-dark: #1f1f1f;
+
 // Path to Bulma's sass folder
 @use "bulma/sass" with (
   $family-primary: 'DM Sans',
   $body-background-color: transparent,
-  $box-background-color: white,
-  $navbar-background-color: white,
   $button-active-color: $brown,
   $grey-dark: $brown,
   $grey-light: $beige-light,
@@ -25,6 +32,10 @@ $beige-lighter: #eff0eb;
 );
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+// ============================================================================
+// LIGHT MODE STYLES
+// ============================================================================
 
 html {
     background-color: $beige-lighter;
@@ -50,7 +61,7 @@ body {
     border: none;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
     border-radius: 0rem;
-    background-color: white;
+    background-color: hsl(var(--bulma-menu-background-h, 53), var(--bulma-menu-background-s, 0%), var(--bulma-menu-background-l, 100%));
     padding: 1rem;
 }
 
@@ -90,5 +101,196 @@ aside.menu ul.menu-list li a::first-letter {
 
     .recent-notes-box {
         order: 2;
+    }
+}
+
+// ============================================================================
+// DARK MODE STYLES
+// ============================================================================
+
+// Mixins for dark mode
+@mixin dark-mode-shadow {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+@mixin dark-mode-favicon-brightness {
+    filter: grayscale(100%) brightness(1.2);
+}
+
+// Mixin for dark mode CSS variables
+@mixin dark-mode-variables {
+  // Bulma dark mode base colors
+  --bulma-scheme-h: 221;
+  --bulma-scheme-s: 14%;
+  --bulma-light-l: 90%;
+  --bulma-light-invert-l: 20%;
+  --bulma-dark-l: 20%;
+  --bulma-dark-invert-l: 90%;
+  --bulma-soft-l: 20%;
+  --bulma-bold-l: 90%;
+  --bulma-soft-invert-l: 90%;
+  --bulma-bold-invert-l: 20%;
+  --bulma-hover-background-l-delta: 15%;
+  --bulma-active-background-l-delta: 20%;
+  --bulma-hover-border-l-delta: 10%;
+  --bulma-active-border-l-delta: 20%;
+  --bulma-hover-color-l-delta: 5%;
+  --bulma-active-color-l-delta: 10%;
+  --bulma-shadow-h: 221;
+  --bulma-shadow-s: 14%;
+  --bulma-shadow-l: 20%;
+
+  // Custom brand colors for dark mode (HSL)
+  --bulma-primary-h: 350;
+  --bulma-primary-s: 100%;
+  --bulma-primary-l: 79%;
+  --bulma-link-h: 350;
+  --bulma-link-s: 100%;
+  --bulma-link-l: 79%;
+  --bulma-warning-h: 48;
+  --bulma-warning-s: 100%;
+  --bulma-warning-l: 67%;
+  --bulma-title-color-h: 0;
+  --bulma-title-color-s: 0%;
+  --bulma-title-color-l: 100%;
+
+  // Scheme colors
+  --bulma-scheme-main-l: 5%;
+  --bulma-scheme-main-bis-l: 5%;
+  --bulma-scheme-main-ter-l: 5%;
+  --bulma-background-l: 5%;
+  --bulma-border-l: 24%;
+  --bulma-border-hover-l: 29%;
+  --bulma-text-l: 100%;
+  --bulma-text-strong-l: 100%;
+  --bulma-scheme-invert-l: 100%;
+
+  // Component backgrounds
+  --bulma-box-background-l: 15%;
+  --bulma-menu-background-h: 53;
+  --bulma-menu-background-s: 4%;
+  --bulma-menu-background-l: 15%;
+  --bulma-navbar-background-l: 15%;
+}
+
+// Apply dark mode CSS variables
+[data-theme="dark"] {
+  @include dark-mode-variables;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    @include dark-mode-variables;
+  }
+}
+
+// Dark mode backgrounds
+[data-theme="dark"] html {
+    background-color: $beige-lighter-dark;
+}
+
+[data-theme="dark"] body {
+    background-color: $beige-lighter-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        background-color: $beige-lighter-dark;
+    }
+
+    body {
+        background-color: $beige-lighter-dark;
+    }
+}
+
+// Dark mode: hide diagonal pattern
+[data-theme="dark"] body::before {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    body::before {
+        display: none;
+    }
+}
+
+// Dark mode: sidebar shadow
+[data-theme="dark"] .is-hidden-touch aside.menu {
+    @include dark-mode-shadow;
+}
+
+@media (prefers-color-scheme: dark) {
+    .is-hidden-touch aside.menu {
+        @include dark-mode-shadow;
+    }
+}
+
+// Dark mode: navbar shadow
+[data-theme="dark"] .navbar {
+    @include dark-mode-shadow;
+}
+
+@media (prefers-color-scheme: dark) {
+    .navbar {
+        @include dark-mode-shadow;
+    }
+}
+
+// Dark mode: favicon brightness
+[data-theme="dark"] .bookmark-title-container img {
+    @include dark-mode-favicon-brightness;
+}
+
+@media (prefers-color-scheme: dark) {
+    .bookmark-title-container img {
+        @include dark-mode-favicon-brightness;
+    }
+}
+
+// Dark mode: text color overrides
+[data-theme="dark"] .has-text-dark {
+    color: hsl(0, 0%, 100%) !important;
+}
+
+[data-theme="dark"] .has-text-grey {
+    color: hsl(0, 0%, 71%) !important;
+}
+
+[data-theme="dark"] .title {
+    color: hsl(0, 0%, 71%) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .has-text-dark {
+        color: hsl(0, 0%, 100%) !important;
+    }
+
+    .has-text-grey {
+        color: hsl(0, 0%, 71%) !important;
+    }
+
+    .title {
+        color: hsl(0, 0%, 71%) !important;
+    }
+}
+
+// Dark mode: tag styles
+[data-theme="dark"] .tag.is-dark {
+    background-color: hsl(0, 0%, 96%);
+    color: hsl(0, 0%, 21%);
+}
+
+[data-theme="dark"] .tag.is-dark a {
+    color: hsl(0, 0%, 21%);
+}
+
+@media (prefers-color-scheme: dark) {
+    .tag.is-dark {
+        background-color: hsl(0, 0%, 96%);
+        color: hsl(0, 0%, 21%);
+    }
+
+    .tag.is-dark a {
+        color: hsl(0, 0%, 21%);
     }
 }

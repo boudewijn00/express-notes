@@ -2,6 +2,11 @@ module.exports = {
     isArticlesFolder: (folder) => folder.title === 'articles',
     isEqual: (arg1, arg2) => arg1 === arg2,
     showFolder: (folder) => folder.title !== 'articles',
+    or: (...args) => {
+        // Remove the last argument (Handlebars options object)
+        args.pop();
+        return args.some(arg => !!arg);
+    },
     markdown: (content) => {        
         html = require('markdown-it')({
             html: true,

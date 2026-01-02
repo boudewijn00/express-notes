@@ -13,28 +13,17 @@
             {{#if this.link_excerpt}}
                 <p>{{truncateWords this.link_excerpt 100}}</p>
             {{/if}}
-            {{#if this.tags}}
+            {{#if (or this.tags this.folder this.hacker_news_id)}}
                 <div class="tags">
                     {{#if this.folder}}
-                        <a href="/folders/{{this.folder.folder_id}}" class="tag is-link is-light">{{this.folder.title}}</a>
+                        <a href="/folders/{{this.folder.folder_id}}" class="tag is-link">{{this.folder.title}}</a>
                     {{/if}}
                     {{#if this.hacker_news_id}}
-                        <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning is-light" aria-label="Hacker News discussion">Hacker News</a>
+                        <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning" aria-label="Hacker News discussion">hacker news</a>
                     {{/if}}
                     {{#each this.tags}}
-                        <span class="tag is-light has-text-primary">{{this}}</span>
+                        <span class="tag is-dark">{{this}}</span>
                     {{/each}}
-                </div>
-            {{else if this.folder}}
-                <div class="tags">
-                    <a href="/folders/{{this.folder.folder_id}}" class="tag is-link is-light">{{this.folder.title}}</a>
-                    {{#if this.hacker_news_id}}
-                        <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning is-light" aria-label="Hacker News discussion">Hacker News</a>
-                    {{/if}}
-                </div>
-            {{else if this.hacker_news_id}}
-                <div class="tags">
-                    <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning is-light" aria-label="Hacker News discussion">Hacker News</a>
                 </div>
             {{/if}}
         </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="app-root">
 
 <head>
   <meta charset="utf-8" />
@@ -11,32 +11,23 @@
   <meta name="msvalidate.01" content="CE98461C304B6DE7D7F18193EFEF9BB5" />
   <title>Hello Data Notes</title>
   <link rel="stylesheet" href="/mystyles.css">
-  <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', () => {
-
-      // Get all "navbar-burger" elements
-      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-      // Add a click event on each of them
-      $navbarBurgers.forEach(el => {
-        el.addEventListener('click', () => {
-
-          // Get the target from the "data-target" attribute
-          const target = el.dataset.target;
-          const $target = document.getElementById(target);
-
-          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-          el.classList.toggle('is-active');
-          $target.classList.toggle('is-active');
-
-        });
-      });
-
-    });
-  </script>
+  <script src="/theme.js"></script>
   <style>
     .content pre {
       padding: 0em;
+    }
+
+    /* Theme toggle icon styling */
+    #theme-toggle {
+      cursor: pointer;
+    }
+
+    #theme-toggle:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] #theme-toggle:hover {
+      background-color: rgba(255, 255, 255, 0.1);
     }
   </style>
 </head>
@@ -45,12 +36,40 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a aria-label="home" class="navbar-item" href="/">
-        <img alt="home icon" src="/home.png" width="28" height="28">
+        <span class="icon home-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+        </span>
       </a>
-      <a class="navbar-item is-size-5 has-text-primary" href="/search">
-        Search
+      <a role="button" class="navbar-item" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <span class="icon" id="theme-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Moon icon for light mode (switch to dark) -->
+            <path class="theme-icon-moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            <!-- Sun icon for dark mode (switch to light) - hidden by default -->
+            <circle class="theme-icon-sun" cx="12" cy="12" r="5" style="display: none;"></circle>
+            <line class="theme-icon-sun" x1="12" y1="1" x2="12" y2="3" style="display: none;"></line>
+            <line class="theme-icon-sun" x1="12" y1="21" x2="12" y2="23" style="display: none;"></line>
+            <line class="theme-icon-sun" x1="4.22" y1="4.22" x2="5.64" y2="5.64" style="display: none;"></line>
+            <line class="theme-icon-sun" x1="18.36" y1="18.36" x2="19.78" y2="19.78" style="display: none;"></line>
+            <line class="theme-icon-sun" x1="1" y1="12" x2="3" y2="12" style="display: none;"></line>
+            <line class="theme-icon-sun" x1="21" y1="12" x2="23" y2="12" style="display: none;"></line>
+            <line class="theme-icon-sun" x1="4.22" y1="19.78" x2="5.64" y2="18.36" style="display: none;"></line>
+            <line class="theme-icon-sun" x1="18.36" y1="5.64" x2="19.78" y2="4.22" style="display: none;"></line>
+          </svg>
+        </span>
       </a>
-      <a class="navbar-item is-size-5 has-text-primary" href="/about">
+      <a aria-label="search" class="navbar-item" href="/search">
+        <span class="icon search-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </span>
+      </a>
+      <a class="navbar-item is-size-5" href="/about">
         Whats behind all this
       </a>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="menuItems">
@@ -97,7 +116,7 @@
       </div>
     </div>
   </section>
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+  <link rel="stylesheet" id="highlight-theme" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
   <script>hljs.highlightAll();</script>
 </body>
