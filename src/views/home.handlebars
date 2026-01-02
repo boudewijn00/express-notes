@@ -23,7 +23,7 @@
         {{#if recentNotes}}
             {{#each recentNotes}}
                 <div class="block">
-                    {{> bookmark this}}
+                    {{> bookmark this showDate=true}}
                 </div>
                 {{#unless @last}}<hr/>{{/unless}}
             {{/each}}

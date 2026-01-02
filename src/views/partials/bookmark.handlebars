@@ -1,13 +1,12 @@
 <div class="block content is-normal">
     <div class="media">
         <div class="media-content">
-            {{#if this.created_time}}
-                <p class="has-text-grey is-size-7">{{formatDate this.created_time}}</p>
+            {{#if showDate}}
+                {{#if this.created_time}}
+                    <p class="has-text-grey is-size-7">{{formatDate this.created_time}}</p>
+                {{/if}}
             {{/if}}
             <div class="bookmark-title-container" style="display: flex; align-items: flex-start; gap: 0.5em;">
-                {{#if this.link_favicon}}
-                    <img src="{{this.link_favicon}}" alt="" style="height: 1.25em; width: 1.25em; filter: grayscale(100%); margin-top: 0.15em;">
-                {{/if}}
                 <a aria-label="external link" target="_blank" class="is-underlined" href={{this.body}}>{{this.title}}</a>
             </div>
             {{#if this.link_excerpt}}
