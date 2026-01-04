@@ -21,8 +21,9 @@ $beige-lighter-dark: #1f1f1f;
   $button-active-color: $brown,
   $grey-dark: $brown,
   $grey-light: $beige-light,
-  $primary: $beige,
-  $link: $pink,
+  $primary: $pink-dark,
+  $link: $pink-dark,
+  $warning: $purple-dark,
   $control-border-width: 2px,
   $input-shadow: none,
   $title-color: $brown,
@@ -108,15 +109,6 @@ aside.menu ul.menu-list li a::first-letter {
 // DARK MODE STYLES
 // ============================================================================
 
-// Mixins for dark mode
-@mixin dark-mode-shadow {
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
-}
-
-@mixin dark-mode-favicon-brightness {
-    filter: grayscale(100%) brightness(1.2);
-}
-
 // Mixin for dark mode CSS variables
 @mixin dark-mode-variables {
   // Bulma dark mode base colors
@@ -146,10 +138,7 @@ aside.menu ul.menu-list li a::first-letter {
   --bulma-primary-l: 79%;
   --bulma-link-h: 350;
   --bulma-link-s: 100%;
-  --bulma-link-l: 79%;
-  --bulma-warning-h: 48;
-  --bulma-warning-s: 100%;
-  --bulma-warning-l: 67%;
+  --bulma-link-l: 79%;;
   --bulma-title-color-h: 0;
   --bulma-title-color-s: 0%;
   --bulma-title-color-l: 100%;
@@ -158,7 +147,7 @@ aside.menu ul.menu-list li a::first-letter {
   --bulma-scheme-main-l: 5%;
   --bulma-scheme-main-bis-l: 5%;
   --bulma-scheme-main-ter-l: 5%;
-  --bulma-background-l: 5%;
+  --bulma-background-l: 20%;
   --bulma-border-l: 24%;
   --bulma-border-hover-l: 29%;
   --bulma-text-l: 100%;
@@ -173,124 +162,55 @@ aside.menu ul.menu-list li a::first-letter {
   --bulma-navbar-background-l: 15%;
 }
 
-// Apply dark mode CSS variables
-[data-theme="dark"] {
+// Mixin for all dark mode styles
+@mixin dark-mode-styles {
   @include dark-mode-variables;
-}
 
-@media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) {
-    @include dark-mode-variables;
+  html {
+    background-color: $beige-lighter-dark;
+  }
+
+  body {
+    background-color: $beige-lighter-dark;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .is-hidden-touch aside.menu {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .navbar {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .bookmark-title-container img {
+    filter: grayscale(100%) brightness(1.2);
+  }
+
+  .has-text-dark {
+    color: hsl(0, 0%, 100%) !important;
+  }
+
+  .has-text-grey {
+    color: hsl(0, 0%, 71%) !important;
+  }
+
+  .title {
+    color: hsl(0, 0%, 71%) !important;
   }
 }
 
-// Dark mode backgrounds
-[data-theme="dark"] html {
-    background-color: $beige-lighter-dark;
+// Apply dark mode when explicitly set
+[data-theme="dark"] {
+  @include dark-mode-styles;
 }
 
-[data-theme="dark"] body {
-    background-color: $beige-lighter-dark;
-}
-
+// Apply dark mode based on system preference (unless light mode is explicitly set)
 @media (prefers-color-scheme: dark) {
-    html {
-        background-color: $beige-lighter-dark;
-    }
-
-    body {
-        background-color: $beige-lighter-dark;
-    }
-}
-
-// Dark mode: hide diagonal pattern
-[data-theme="dark"] body::before {
-    display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-    body::before {
-        display: none;
-    }
-}
-
-// Dark mode: sidebar shadow
-[data-theme="dark"] .is-hidden-touch aside.menu {
-    @include dark-mode-shadow;
-}
-
-@media (prefers-color-scheme: dark) {
-    .is-hidden-touch aside.menu {
-        @include dark-mode-shadow;
-    }
-}
-
-// Dark mode: navbar shadow
-[data-theme="dark"] .navbar {
-    @include dark-mode-shadow;
-}
-
-@media (prefers-color-scheme: dark) {
-    .navbar {
-        @include dark-mode-shadow;
-    }
-}
-
-// Dark mode: favicon brightness
-[data-theme="dark"] .bookmark-title-container img {
-    @include dark-mode-favicon-brightness;
-}
-
-@media (prefers-color-scheme: dark) {
-    .bookmark-title-container img {
-        @include dark-mode-favicon-brightness;
-    }
-}
-
-// Dark mode: text color overrides
-[data-theme="dark"] .has-text-dark {
-    color: hsl(0, 0%, 100%) !important;
-}
-
-[data-theme="dark"] .has-text-grey {
-    color: hsl(0, 0%, 71%) !important;
-}
-
-[data-theme="dark"] .title {
-    color: hsl(0, 0%, 71%) !important;
-}
-
-@media (prefers-color-scheme: dark) {
-    .has-text-dark {
-        color: hsl(0, 0%, 100%) !important;
-    }
-
-    .has-text-grey {
-        color: hsl(0, 0%, 71%) !important;
-    }
-
-    .title {
-        color: hsl(0, 0%, 71%) !important;
-    }
-}
-
-// Dark mode: tag styles
-[data-theme="dark"] .tag.is-dark {
-    background-color: hsl(0, 0%, 96%);
-    color: hsl(0, 0%, 21%);
-}
-
-[data-theme="dark"] .tag.is-dark a {
-    color: hsl(0, 0%, 21%);
-}
-
-@media (prefers-color-scheme: dark) {
-    .tag.is-dark {
-        background-color: hsl(0, 0%, 96%);
-        color: hsl(0, 0%, 21%);
-    }
-
-    .tag.is-dark a {
-        color: hsl(0, 0%, 21%);
-    }
+  html:not([data-theme="light"]) {
+    @include dark-mode-styles;
+  }
 }
