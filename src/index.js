@@ -61,15 +61,15 @@ function processLinkImages(notes) {
 }
 
 const getNotes = async (folderId) => {
-    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?parent_id=eq.${folderId}&order=created_time.desc&note_id=neq.${homeArticle}`, config);
-    
-    return replaceResourceTitleByImageTag(response.data).then(results => {   
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&parent_id=eq.${folderId}&order=created_time.desc&note_id=neq.${homeArticle}`, config);
+
+    return replaceResourceTitleByImageTag(response.data).then(results => {
         return processLinkImages(results);
     });
 };
 
 const getRecentNotes = async () => {
-    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?order=created_time.desc&limit=5&note_id=neq.${homeArticle}&parent_id=neq.${articlesFolder}`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&order=created_time.desc&limit=5&note_id=neq.${homeArticle}&parent_id=neq.${articlesFolder}`, config);
 
     return replaceResourceTitleByImageTag(response.data).then(results => {
         return processLinkImages(results);
@@ -94,13 +94,13 @@ const getFolder = async (id) => {
 };
 
 const getNoteByNoteId = async (id) => {
-    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?note_id=eq.${id}`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&note_id=eq.${id}`, config);
 
     return replaceResourceTitleByImageTag(response.data).then(notes => processLinkImages(notes));
 };
 
 const searchNotes = async (query) => {
-    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?link_excerpt_tsv=plfts(english).${query}&order=created_time.desc`, config);
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&link_excerpt_tsv=plfts(english).${query}&order=created_time.desc`, config);
 
     const notes = processLinkImages(response.data);
     return Promise.all(notes.map(async note => {
