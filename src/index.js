@@ -4,6 +4,16 @@ const app = express();
 const port = 3000;
 const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 const articlesFolder = 'b7bc7b8a876e4254ad9865f91ddc8f70';
+const siteUrl = 'https://notes.hello-data.nl';
+
+// Helper to create meta description from text
+const createMetaDescription = (text, maxLength = 160) => {
+    if (!text) return null;
+    // Strip HTML tags and markdown
+    const clean = text.replace(/<[^>]*>/g, '').replace(/[#*_`\[\]]/g, '').trim();
+    if (clean.length <= maxLength) return clean;
+    return clean.substring(0, maxLength - 3).trim() + '...';
+};
 
 const handlebars = require('express-handlebars');
 
@@ -156,11 +166,15 @@ app.get('/', (req, res) => {
         getNoteByNoteId(homeArticle),
         getRecentNotes(),
     ]).then(([folders, notes, recentNotes]) => {
+        const note = notes[0] || { title: '', body: '' };
         res.render('home', {
-            layout : 'main', 
+            layout : 'main',
             folders: folders,
-            note: notes[0] || { title: '', body: '' },
+            note: note,
             recentNotes: recentNotes,
+            // SEO
+            canonicalUrl: siteUrl,
+            metaDescription: createMetaDescription(note.link_excerpt || note.body) || 'Web development notes and bookmarks about PHP, Laravel, Node.js, APIs, databases, and more',
         });
     }).catch((error) => {
         res.render('error', {
@@ -176,7 +190,11 @@ app.get('/search', (req, res) => {
     if (!query) {
         return res.render('search', {
             layout: 'main',
-            query: query
+            query: query,
+            // SEO
+            pageTitle: 'Search',
+            canonicalUrl: `${siteUrl}/search`,
+            metaDescription: 'Search through web development notes and bookmarks',
         });
     }
 
@@ -185,7 +203,11 @@ app.get('/search', (req, res) => {
             layout: 'main',
             notes: notes,
             query: query,
-            hasResults: notes.length > 0
+            hasResults: notes.length > 0,
+            // SEO
+            pageTitle: `Search: ${query}`,
+            canonicalUrl: `${siteUrl}/search?q=${encodeURIComponent(query)}`,
+            metaDescription: `Search results for "${query}" - ${notes.length} results found`,
         });
     }).catch((error) => {
         res.render('error', {
@@ -199,10 +221,14 @@ app.get('/about', (req, res) => {
     getNotes(articlesFolder).then((notes) => {
         const filteredNotes = notes.filter(note => note.note_id !== homeArticle);
         const notesGroupedByMonth = groupNotesByMonth(filteredNotes);
-        
+
         res.render('about', {
             layout : 'main',
-            notes: notesGroupedByMonth
+            notes: notesGroupedByMonth,
+            // SEO
+            pageTitle: 'About',
+            canonicalUrl: `${siteUrl}/about`,
+            metaDescription: 'Articles and thoughts about web development, programming, and technology',
         });
     }).catch((error) => {
         res.render('error', {
@@ -219,14 +245,19 @@ app.get('/folders/:id', (req, res) => {
         getFolders().then((folders) => {
             getNotes(id).then((notes) => {
                 const filteredNotesByTag = filterNotesByTag(notes, queryTag);
+                const pageTitle = queryTag ? `${folder.title} - ${queryTag}` : folder.title;
                 res.render('notes', {
-                    layout : 'main', 
+                    layout : 'main',
                     folders: folders,
                     folder: folder,
                     tags: getTagsFromNotes(notes),
                     notes: groupNotesByMonth(filteredNotesByTag),
                     queryTag: queryTag,
                     url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+                    // SEO
+                    pageTitle: pageTitle,
+                    canonicalUrl: queryTag ? `${siteUrl}/folders/${id}?tag=${encodeURIComponent(queryTag)}` : `${siteUrl}/folders/${id}`,
+                    metaDescription: `Browse ${filteredNotesByTag.length} notes about ${folder.title}${queryTag ? ` tagged with ${queryTag}` : ''}`,
                 });
             });
         });
@@ -236,6 +267,88 @@ app.get('/folders/:id', (req, res) => {
             error: error
         });
     })
+});
+
+// Dynamic sitemap generation
+app.get('/sitemap.xml', async (req, res) => {
+    try {
+        const folders = await getFolders();
+        // Get all notes from all folders (excluding articles folder for main sitemap)
+        const allNotesPromises = folders
+            .filter(f => f.folder_id !== articlesFolder)
+            .map(f => getNotes(f.folder_id));
+        const notesArrays = await Promise.all(allNotesPromises);
+        const allNotes = notesArrays.flat();
+
+        // Also get article notes
+        const articleNotes = await getNotes(articlesFolder);
+        const filteredArticles = articleNotes.filter(n => n.note_id !== homeArticle);
+
+        const now = new Date().toISOString().split('T')[0];
+
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${siteUrl}/</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${siteUrl}/about</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${siteUrl}/search</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>`;
+
+        // Add folders
+        for (const folder of folders) {
+            if (folder.folder_id === articlesFolder) continue;
+            xml += `
+  <url>
+    <loc>${siteUrl}/folders/${folder.folder_id}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+        }
+
+        // Add individual notes
+        for (const note of allNotes) {
+            const lastmod = new Date(note.created_time).toISOString().split('T')[0];
+            xml += `
+  <url>
+    <loc>${siteUrl}/notes/${note.note_id}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+        }
+
+        // Add article notes
+        for (const note of filteredArticles) {
+            const lastmod = new Date(note.created_time).toISOString().split('T')[0];
+            xml += `
+  <url>
+    <loc>${siteUrl}/notes/${note.note_id}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+        }
+
+        xml += `
+</urlset>`;
+
+        res.set('Content-Type', 'application/xml');
+        res.send(xml);
+    } catch (error) {
+        res.status(500).send('Error generating sitemap');
+    }
 });
 
 app.get('/notes/:id', (req, res) => {
@@ -252,13 +365,38 @@ app.get('/notes/:id', (req, res) => {
         return getFolder(note.parent_id);
     })
     .then((folder) => {
+        const note = noteArray[0];
+        const canonicalUrl = `${siteUrl}/notes/${id}`;
+
+        // JSON-LD structured data for the note
+        const structuredData = `<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": ${JSON.stringify(note.title)},
+  "datePublished": "${note.created_time}",
+  "url": "${canonicalUrl}",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Hello Data Notes"
+  }
+}
+</script>`;
+
         res.render('note', {
-            layout : 'main', 
+            layout : 'main',
             folder: folder,
             tags: getTagsFromNotes(noteArray),
             notes: groupNotesByMonth(noteArray),
             queryTag: null,
             url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+            // SEO
+            pageTitle: note.title,
+            canonicalUrl: canonicalUrl,
+            metaDescription: createMetaDescription(note.link_excerpt || note.body),
+            ogType: 'article',
+            ogImage: note.link_image || null,
+            structuredData: structuredData,
         });
     })
     .catch((error) => {

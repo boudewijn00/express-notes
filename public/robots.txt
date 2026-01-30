@@ -1,2 +1,4 @@
 User-agent: *
 Disallow:
+
+Sitemap: https://notes.hello-data.nl/sitemap.xml
