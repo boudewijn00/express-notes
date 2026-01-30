@@ -4,12 +4,29 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="description" content="notes about web development" />
+  <meta name="description" content="{{#if metaDescription}}{{metaDescription}}{{else}}Notes and bookmarks about web development, programming, and technology{{/if}}" />
   <meta name="keywords" content="php laravel nodejs serverless api databases hardware" />
-  <meta name=”robots” content=”index,follow” />
+  <meta name="robots" content="index,follow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="msvalidate.01" content="CE98461C304B6DE7D7F18193EFEF9BB5" />
-  <title>Hello Data Notes</title>
+  <title>{{#if pageTitle}}{{pageTitle}} | {{/if}}Hello Data Notes</title>
+  {{#if canonicalUrl}}<link rel="canonical" href="{{canonicalUrl}}" />{{/if}}
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Hello Data Notes" />
+  <meta property="og:type" content="{{#if ogType}}{{ogType}}{{else}}website{{/if}}" />
+  <meta property="og:title" content="{{#if pageTitle}}{{pageTitle}} | Hello Data Notes{{else}}Hello Data Notes{{/if}}" />
+  <meta property="og:description" content="{{#if metaDescription}}{{metaDescription}}{{else}}Notes and bookmarks about web development, programming, and technology{{/if}}" />
+  {{#if canonicalUrl}}<meta property="og:url" content="{{canonicalUrl}}" />{{/if}}
+  {{#if ogImage}}<meta property="og:image" content="{{ogImage}}" />{{/if}}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="{{#if pageTitle}}{{pageTitle}} | Hello Data Notes{{else}}Hello Data Notes{{/if}}" />
+  <meta name="twitter:description" content="{{#if metaDescription}}{{metaDescription}}{{else}}Notes and bookmarks about web development, programming, and technology{{/if}}" />
+  {{#if ogImage}}<meta name="twitter:image" content="{{ogImage}}" />{{/if}}
+
+  {{#if structuredData}}{{{structuredData}}}{{/if}}
   <link rel="stylesheet" href="/mystyles.css">
   <script src="/theme.js"></script>
   <style>
