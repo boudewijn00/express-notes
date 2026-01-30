@@ -6,6 +6,20 @@ const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 const articlesFolder = 'b7bc7b8a876e4254ad9865f91ddc8f70';
 const siteUrl = 'https://notes.hello-data.nl';
 
+// Generate URL-friendly slug from title
+const slugify = (text) => {
+    if (!text) return '';
+    return text
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+        .replace(/[^a-z0-9\s-]/g, '')    // Remove special chars
+        .trim()
+        .replace(/\s+/g, '-')            // Spaces to hyphens
+        .replace(/-+/g, '-')             // Collapse multiple hyphens
+        .substring(0, 80);               // Limit length
+};
+
 // Helper to create meta description from text
 const createMetaDescription = (text, maxLength = 160) => {
     if (!text) return null;
@@ -101,6 +115,18 @@ const getFolder = async (id) => {
     const response = await axios.get(`${process.env.POSTGREST_HOST}/folders?folder_id=eq.${id}`, config);
 
     return response.data[0];
+};
+
+// Find folder by slug
+const getFolderBySlug = async (slug) => {
+    const folders = await getFolders();
+    return folders.find(f => slugify(f.title) === slug);
+};
+
+// Find note by slug within a folder
+const getNoteBySlug = async (folderId, slug) => {
+    const notes = await getNotes(folderId);
+    return notes.find(n => slugify(n.title) === slug);
 };
 
 const getNoteByNoteId = async (id) => {
@@ -238,41 +264,35 @@ app.get('/about', (req, res) => {
     });
 });
 
+// Redirect old folder URLs to new slug-based URLs
 app.get('/folders/:id', (req, res) => {
     const id = req.params.id;
     const queryTag = req.query.tag;
     getFolder(id).then((folder) => {
-        getFolders().then((folders) => {
-            getNotes(id).then((notes) => {
-                const filteredNotesByTag = filterNotesByTag(notes, queryTag);
-                const pageTitle = queryTag ? `${folder.title} - ${queryTag}` : folder.title;
-                res.render('notes', {
-                    layout : 'main',
-                    folders: folders,
-                    folder: folder,
-                    tags: getTagsFromNotes(notes),
-                    notes: groupNotesByMonth(filteredNotesByTag),
-                    queryTag: queryTag,
-                    url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
-                    // SEO
-                    pageTitle: pageTitle,
-                    canonicalUrl: queryTag ? `${siteUrl}/folders/${id}?tag=${encodeURIComponent(queryTag)}` : `${siteUrl}/folders/${id}`,
-                    metaDescription: `Browse ${filteredNotesByTag.length} notes about ${folder.title}${queryTag ? ` tagged with ${queryTag}` : ''}`,
-                });
-            });
-        });
+        if (!folder) {
+            return res.status(404).render('error', { layout: 'main', error: { message: 'Folder not found' } });
+        }
+        const folderSlug = slugify(folder.title);
+        const redirectUrl = queryTag
+            ? `/${folderSlug}?tag=${encodeURIComponent(queryTag)}`
+            : `/${folderSlug}`;
+        res.redirect(301, redirectUrl);
     }).catch((error) => {
-        res.render('error', {
-            layout : 'main',
-            error: error
-        });
-    })
+        res.render('error', { layout: 'main', error: error });
+    });
 });
 
 // Dynamic sitemap generation
 app.get('/sitemap.xml', async (req, res) => {
     try {
         const folders = await getFolders();
+
+        // Create folder lookup map
+        const folderMap = {};
+        for (const f of folders) {
+            folderMap[f.folder_id] = f;
+        }
+
         // Get all notes from all folders (excluding articles folder for main sitemap)
         const allNotesPromises = folders
             .filter(f => f.folder_id !== articlesFolder)
@@ -306,23 +326,28 @@ app.get('/sitemap.xml', async (req, res) => {
     <priority>0.5</priority>
   </url>`;
 
-        // Add folders
+        // Add folders (slug-based URLs)
         for (const folder of folders) {
             if (folder.folder_id === articlesFolder) continue;
+            const folderSlug = slugify(folder.title);
             xml += `
   <url>
-    <loc>${siteUrl}/folders/${folder.folder_id}</loc>
+    <loc>${siteUrl}/${folderSlug}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
         }
 
-        // Add individual notes
+        // Add individual notes (slug-based URLs: /folder-slug/note-slug)
         for (const note of allNotes) {
+            const folder = folderMap[note.parent_id];
+            if (!folder) continue;
+            const folderSlug = slugify(folder.title);
+            const noteSlug = slugify(note.title);
             const lastmod = new Date(note.created_time).toISOString().split('T')[0];
             xml += `
   <url>
-    <loc>${siteUrl}/notes/${note.note_id}</loc>
+    <loc>${siteUrl}/${folderSlug}/${noteSlug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -331,10 +356,11 @@ app.get('/sitemap.xml', async (req, res) => {
 
         // Add article notes
         for (const note of filteredArticles) {
+            const noteSlug = slugify(note.title);
             const lastmod = new Date(note.created_time).toISOString().split('T')[0];
             xml += `
   <url>
-    <loc>${siteUrl}/notes/${note.note_id}</loc>
+    <loc>${siteUrl}/articles/${noteSlug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -351,24 +377,88 @@ app.get('/sitemap.xml', async (req, res) => {
     }
 });
 
+// Redirect old note URLs to new slug-based URLs
 app.get('/notes/:id', (req, res) => {
     const id = req.params.id;
-    let noteArray;
+
+    // Home article redirects to home page
+    if (id === homeArticle) {
+        return res.redirect(301, '/');
+    }
 
     getNoteByNoteId(id)
     .then(notes => {
         if (!notes || notes.length === 0) {
             throw new Error('Note not found');
         }
-        noteArray = notes;
-        const note = noteArray[0];
-        return getFolder(note.parent_id);
+        const note = notes[0];
+        return getFolder(note.parent_id).then(folder => ({ note, folder }));
     })
-    .then((folder) => {
-        const note = noteArray[0];
-        const canonicalUrl = `${siteUrl}/notes/${id}`;
+    .then(({ note, folder }) => {
+        const folderSlug = slugify(folder.title);
+        const noteSlug = slugify(note.title);
+        res.redirect(301, `/${folderSlug}/${noteSlug}`);
+    })
+    .catch((error) => {
+        res.render('error', { layout: 'main', error: error });
+    });
+});
 
-        // JSON-LD structured data for the note
+// Slug-based folder route (must be after specific routes like /about, /search)
+app.get('/:folderSlug', async (req, res) => {
+    const folderSlug = req.params.folderSlug;
+    const queryTag = req.query.tag;
+
+    try {
+        const folder = await getFolderBySlug(folderSlug);
+        if (!folder) {
+            return res.status(404).render('error', { layout: 'main', error: { message: 'Folder not found' } });
+        }
+
+        const folders = await getFolders();
+        const notes = await getNotes(folder.folder_id);
+        const filteredNotesByTag = filterNotesByTag(notes, queryTag);
+        const pageTitle = queryTag ? `${folder.title} - ${queryTag}` : folder.title;
+
+        // Add slugs to notes for linking
+        const notesWithSlugs = filteredNotesByTag.map(n => ({ ...n, slug: slugify(n.title) }));
+
+        res.render('notes', {
+            layout: 'main',
+            folders: folders,
+            folder: { ...folder, slug: folderSlug },
+            tags: getTagsFromNotes(notes),
+            notes: groupNotesByMonth(notesWithSlugs),
+            queryTag: queryTag,
+            url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+            // SEO
+            pageTitle: pageTitle,
+            canonicalUrl: queryTag ? `${siteUrl}/${folderSlug}?tag=${encodeURIComponent(queryTag)}` : `${siteUrl}/${folderSlug}`,
+            metaDescription: `Browse ${filteredNotesByTag.length} notes about ${folder.title}${queryTag ? ` tagged with ${queryTag}` : ''}`,
+        });
+    } catch (error) {
+        res.render('error', { layout: 'main', error: error });
+    }
+});
+
+// Slug-based note route
+app.get('/:folderSlug/:noteSlug', async (req, res) => {
+    const { folderSlug, noteSlug } = req.params;
+
+    try {
+        const folder = await getFolderBySlug(folderSlug);
+        if (!folder) {
+            return res.status(404).render('error', { layout: 'main', error: { message: 'Folder not found' } });
+        }
+
+        const note = await getNoteBySlug(folder.folder_id, noteSlug);
+        if (!note) {
+            return res.status(404).render('error', { layout: 'main', error: { message: 'Note not found' } });
+        }
+
+        const canonicalUrl = `${siteUrl}/${folderSlug}/${noteSlug}`;
+
+        // JSON-LD structured data
         const structuredData = `<script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -383,11 +473,12 @@ app.get('/notes/:id', (req, res) => {
 }
 </script>`;
 
+        const noteArray = [note];
         res.render('note', {
-            layout : 'main',
-            folder: folder,
+            layout: 'main',
+            folder: { ...folder, slug: folderSlug },
             tags: getTagsFromNotes(noteArray),
-            notes: groupNotesByMonth(noteArray),
+            notes: groupNotesByMonth(noteArray.map(n => ({ ...n, slug: noteSlug }))),
             queryTag: null,
             url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
             // SEO
@@ -398,13 +489,9 @@ app.get('/notes/:id', (req, res) => {
             ogImage: note.link_image || null,
             structuredData: structuredData,
         });
-    })
-    .catch((error) => {
-        res.render('error', {
-            layout : 'main',
-            error: error
-        });
-    });
+    } catch (error) {
+        res.render('error', { layout: 'main', error: error });
+    }
 });
 
 app.listen(port, () => {

@@ -1,4 +1,19 @@
+// Generate URL-friendly slug from text
+const slugify = (text) => {
+    if (!text) return '';
+    return text
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .substring(0, 80);
+};
+
 module.exports = {
+    slugify: slugify,
     isArticlesFolder: (folder) => folder.title === 'articles',
     isEqual: (arg1, arg2) => arg1 === arg2,
     showFolder: (folder) => folder.title !== 'articles',
@@ -34,7 +49,7 @@ module.exports = {
     },
     prepareAboutNotes: (notes) => {
         if (!notes) return {};
-        
+
         const newNotesByMonth = {};
         for (const month in notes) {
             newNotesByMonth[month] = notes[month].map(note => {
@@ -42,7 +57,9 @@ module.exports = {
                 if (newNote.body) {
                     const parts = newNote.body.split('---');
                     if (parts.length > 1) {
-                        const readMoreLink = ` <a href="/notes/${newNote.note_id}">Read more</a>`;
+                        // Use slug-based URL: /articles/note-title-slug
+                        const noteSlug = slugify(newNote.title);
+                        const readMoreLink = ` <a href="/articles/${noteSlug}">Read more</a>`;
                         newNote.body = parts[0].trim() + readMoreLink;
                     } else {
                         newNote.body = parts[0];
