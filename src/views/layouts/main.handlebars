@@ -101,7 +101,7 @@
         <ul class="menu-list">
           {{#folders}}
           {{#if (showFolder this) }}
-          <li><a href="/folders/{{folder_id}}"{{#if (isEqual ../folder.folder_id folder_id)}} class="is-active"{{/if}}>{{title}}</a></li>
+          <li><a href="/{{slugify title}}"{{#if (isEqual ../folder.folder_id folder_id)}} class="is-active"{{/if}}>{{title}}</a></li>
           {{/if}}
           {{/folders}}
         </ul>
@@ -120,7 +120,7 @@
             <ul class="menu-list">
               {{#folders}}
                 {{#if (showFolder this) }}
-                  <li><a href="/folders/{{folder_id}}"{{#if (isEqual ../folder.folder_id folder_id)}} class="is-active"{{/if}}>{{title}}</a></li>
+                  <li><a href="/{{slugify title}}"{{#if (isEqual ../folder.folder_id folder_id)}} class="is-active"{{/if}}>{{title}}</a></li>
                 {{/if}}
               {{/folders}}
             </ul>
