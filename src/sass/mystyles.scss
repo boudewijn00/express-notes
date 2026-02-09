@@ -44,6 +44,7 @@ html {
 
 body {
     position: relative;
+    min-height: 100vh;
 
     &::before {
         content: '';
@@ -78,8 +79,28 @@ aside.menu ul.menu-list li a::first-letter {
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 }
 
+.box .block.content:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: 1.25rem;
+}
+
 .bookmark-title-container + .tags {
     margin-top: 1rem;
+}
+
+.bookmark-tags {
+    align-items: center;
+
+    a.tag.is-warning {
+        margin-left: auto;
+        border: none;
+        background-color: transparent;
+        text-decoration: underline;
+        padding: 0;
+        height: auto;
+        font-size: 0.85rem;
+        color: hsl(349, 100%, 39%);
+    }
 }
 
 .home-container {
@@ -103,6 +124,18 @@ aside.menu ul.menu-list li a::first-letter {
     .recent-notes-box {
         order: 2;
     }
+}
+
+// Footer
+.site-footer {
+    padding: 2rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 0.85rem;
+    color: $brown;
+    background-color: $beige-lighter;
+    position: relative;
 }
 
 // ============================================================================
@@ -155,11 +188,11 @@ aside.menu ul.menu-list li a::first-letter {
   --bulma-scheme-invert-l: 100%;
 
   // Component backgrounds
-  --bulma-box-background-l: 15%;
-  --bulma-menu-background-h: 53;
-  --bulma-menu-background-s: 4%;
-  --bulma-menu-background-l: 15%;
-  --bulma-navbar-background-l: 15%;
+  --bulma-box-background-l: 17%;
+  --bulma-menu-background-h: 0;
+  --bulma-menu-background-s: 0%;
+  --bulma-menu-background-l: 17%;
+  --bulma-navbar-background-l: 17%;
 }
 
 // Mixin for all dark mode styles
@@ -178,12 +211,25 @@ aside.menu ul.menu-list li a::first-letter {
     }
   }
 
+  // #4 - Align sidebar with box elevation
   .is-hidden-touch aside.menu {
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    background-color: #2a2a2a;
+    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    .menu-list a {
+      background-color: transparent;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    }
   }
 
+  // #7 - Visible box definition
   .navbar {
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .bookmark-title-container img {
@@ -194,12 +240,64 @@ aside.menu ul.menu-list li a::first-letter {
     color: hsl(0, 0%, 100%) !important;
   }
 
+  // #2 - Dimmer date text
   .has-text-grey {
-    color: hsl(0, 0%, 71%) !important;
+    color: hsl(0, 0%, 55%) !important;
   }
 
+  // #1 - Brighter titles for hierarchy
   .title {
-    color: hsl(0, 0%, 71%) !important;
+    color: hsl(0, 0%, 93%) !important;
+  }
+
+  // #3 - Boxes lighter than page background
+  .box {
+    background-color: #2a2a2a;
+    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    .block.content:not(:last-child) {
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  // #5 - Ghost/outline tags (non-clickable tag values)
+  span.tag {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  // Clickable tags (folder links)
+  a.tag {
+    background-color: transparent;
+    border: 1px solid rgba(255, 148, 168, 0.4);
+    color: #ff94a8;
+  }
+
+  // Hacker News link — plain text link, not a pill
+  a.tag.is-warning {
+    border: none;
+    color: #e8b4a0;
+    text-decoration: underline;
+    padding: 0;
+    height: auto;
+    font-size: 0.85rem;
+  }
+
+  // #6 - Softer link color to differentiate from tags
+  a:not(.navbar-item):not(.tag):not(.menu-list a) {
+    color: #e8b4a0;
+  }
+
+  .menu-list a {
+    color: white;
+  }
+
+  // #8 - Footer styling
+  .site-footer {
+    background-color: #161616;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
   }
 }
 
