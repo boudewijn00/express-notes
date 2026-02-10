@@ -21,7 +21,10 @@
                         <span class="tag is-medium">{{this}}</span>
                     {{/each}}
                     {{#if this.hacker_news_id}}
-                        <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning" aria-label="Hacker News discussion">discuss on hacker news</a>
+                        <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-medium hn-link" aria-label="Hacker News discussion">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M128 8C60 8 8 60 8 128s52 120 120 120 120-52 120-120S196 8 128 8zm0 220c-55 0-100-45-100-100S73 28 128 28s100 45 100 100-45 100-100 100z"/><path d="M128 140l-40-72h22l29 54 29-54h22l-40 72v48h-22v-48z"/></svg>
+                            hacker news
+                        </a>
                     {{/if}}
                 </div>
             {{/if}}
