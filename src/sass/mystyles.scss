@@ -84,6 +84,10 @@ aside.menu ul.menu-list li a::first-letter {
     padding-bottom: 1.25rem;
 }
 
+a:not(.tag):not(.navbar-item):not(.menu-list a) {
+    text-decoration: underline;
+}
+
 .bookmark-title-container + .tags {
     margin-top: 1rem;
 }
@@ -108,6 +112,10 @@ aside.menu ul.menu-list li a::first-letter {
     flex-direction: column;
 }
 
+.latest-article-box {
+    order: 0;
+}
+
 .main-note-box {
     order: 2;
 }
@@ -121,8 +129,12 @@ aside.menu ul.menu-list li a::first-letter {
         order: 1;
     }
 
-    .recent-notes-box {
+    .latest-article-box {
         order: 2;
+    }
+
+    .recent-notes-box {
+        order: 3;
     }
 }
 
