@@ -6,6 +6,13 @@
                 <div class="media-content">
                     <div class="content">
                         <p class="title is-4 has-text-dark">{{this.title}}</p>
+                        {{#if this.tags.length}}
+                        <div class="tags">
+                            {{#each this.tags}}
+                                <span class="tag is-medium">{{this}}</span>
+                            {{/each}}
+                        </div>
+                        {{/if}}
                         {{{markdown this.body}}}
                     </div>
                 </div>

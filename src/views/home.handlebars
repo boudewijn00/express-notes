@@ -17,6 +17,22 @@
         </div>
     </div>
 
+    {{#if latestArticle}}
+    <div class="box latest-article-box">
+        <div class="content">
+            <h2 class="title is-4 has-text-dark">{{latestArticle.title}}</h2>
+            {{#if latestArticle.tags.length}}
+            <div class="tags">
+                {{#each latestArticle.tags}}
+                    <span class="tag is-medium">{{this}}</span>
+                {{/each}}
+            </div>
+            {{/if}}
+            {{{markdown latestArticle.body}}}
+        </div>
+    </div>
+    {{/if}}
+
     <div class="box recent-notes-box">
         <h2 class="title is-4 has-text-dark">Recent Notes</h2>
         <hr/>

@@ -191,13 +191,33 @@ app.get('/', (req, res) => {
         getFolders(),
         getNoteByNoteId(homeArticle),
         getRecentNotes(),
-    ]).then(([folders, notes, recentNotes]) => {
+        getNotes(articlesFolder),
+    ]).then(([folders, notes, recentNotes, articleNotes]) => {
         const note = notes[0] || { title: '', body: '' };
+
+        // Get the latest article and prepare a preview
+        let latestArticle = null;
+        const filteredArticles = articleNotes.filter(n => n.note_id !== homeArticle);
+        if (filteredArticles.length > 0) {
+            const article = { ...filteredArticles[0] };
+            if (article.body) {
+                const parts = article.body.split('---');
+                if (parts.length > 1) {
+                    const articleSlug = slugify(article.title);
+                    const readMoreLink = ` <a href="/articles/${articleSlug}">Read more</a>`;
+                    article.body = parts[0].trim() + readMoreLink;
+                }
+                article.body = article.body.replace(/\\/g, '');
+            }
+            latestArticle = article;
+        }
+
         res.render('home', {
             layout : 'main',
             folders: folders,
             note: note,
             recentNotes: recentNotes,
+            latestArticle: latestArticle,
             // SEO
             canonicalUrl: siteUrl,
             metaDescription: createMetaDescription(note.link_excerpt || note.body) || 'Web development notes and bookmarks about PHP, Laravel, Node.js, APIs, databases, and more',

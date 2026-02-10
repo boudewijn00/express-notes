@@ -15,10 +15,10 @@
             {{#if (or this.tags this.folder this.hacker_news_id)}}
                 <div class="tags bookmark-tags">
                     {{#if this.folder}}
-                        <a href="/{{slugify this.folder.title}}" class="tag is-link">{{this.folder.title}}</a>
+                        <a href="/{{slugify this.folder.title}}" class="tag is-link is-medium">{{this.folder.title}}</a>
                     {{/if}}
                     {{#each this.tags}}
-                        <span class="tag is-dark">{{this}}</span>
+                        <span class="tag is-medium">{{this}}</span>
                     {{/each}}
                     {{#if this.hacker_news_id}}
                         <a href="https://news.ycombinator.com/item?id={{this.hacker_news_id}}" target="_blank" class="tag is-warning" aria-label="Hacker News discussion">discuss on hacker news</a>
