@@ -94,17 +94,16 @@ a:not(.tag):not(.navbar-item):not(.menu-list a) {
 
 .bookmark-tags {
     align-items: center;
+}
 
-    a.tag.is-warning {
-        margin-left: auto;
-        border: none;
-        background-color: transparent;
-        text-decoration: underline;
-        padding: 0;
-        height: auto;
-        font-size: 0.85rem;
-        color: hsl(349, 100%, 39%);
-    }
+.hn-link {
+    margin-left: auto;
+    gap: 0.3em;
+    text-decoration: none !important;
+}
+
+a.tag:hover {
+    opacity: 0.7;
 }
 
 .home-container {
@@ -238,6 +237,12 @@ a:not(.tag):not(.navbar-item):not(.menu-list a) {
     }
   }
 
+  .navbar-menu .menu-list a.is-active {
+    background-color: transparent;
+    color: white;
+    font-weight: 600;
+  }
+
   // #7 - Visible box definition
   .navbar {
     box-shadow: none;
@@ -287,14 +292,10 @@ a:not(.tag):not(.navbar-item):not(.menu-list a) {
     color: #ff94a8;
   }
 
-  // Hacker News link — plain text link, not a pill
-  a.tag.is-warning {
-    border: none;
-    color: #e8b4a0;
-    text-decoration: underline;
-    padding: 0;
-    height: auto;
-    font-size: 0.85rem;
+  .hn-link {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.6);
   }
 
   // #6 - Softer link color to differentiate from tags
