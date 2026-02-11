@@ -481,7 +481,7 @@ app.get('/:folderSlug', async (req, res) => {
         
         // Calculate pagination
         const totalNotes = filteredNotesByTag.length;
-        const totalPages = Math.ceil(totalNotes / notesPerPage);
+        const totalPages = Math.max(1, Math.ceil(totalNotes / notesPerPage));
         const offset = (page - 1) * notesPerPage;
         
         // Get paginated notes
@@ -506,19 +506,21 @@ app.get('/:folderSlug', async (req, res) => {
         };
         
         // Generate page numbers for pagination UI (show max 7 pages)
-        const maxPagesToShow = 7;
-        let startPage = Math.max(1, page - Math.floor(maxPagesToShow / 2));
-        let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-        
-        if (endPage - startPage < maxPagesToShow - 1) {
-            startPage = Math.max(1, endPage - maxPagesToShow + 1);
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-            pagination.pages.push({
-                number: i,
-                isCurrent: i === page
-            });
+        if (totalPages > 0) {
+            const maxPagesToShow = 7;
+            let startPage = Math.max(1, page - Math.floor(maxPagesToShow / 2));
+            let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+            
+            if (endPage - startPage < maxPagesToShow - 1) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                pagination.pages.push({
+                    number: i,
+                    isCurrent: i === page
+                });
+            }
         }
 
         res.render('notes', {
