@@ -2,13 +2,9 @@
     <h1 class="title is-4 is-capitalized ml-1 has-text-dark">{{folder.title}}</h1>
     {{#each tags}}
         {{#if (isEqual this @root.queryTag)}}
-            <span class="tag is-primary is-medium my-1 mr-1">
-                <a class="has-text-white" href="/{{slugify @root.folder.title}}?tag={{this}}">{{this}}</a>
-            </span>
+            <a class="tag is-primary is-medium my-1 mr-1 has-text-white" href="/{{slugify @root.folder.title}}?tag={{this}}">{{this}}</a>
         {{else}}
-            <span class="tag is-medium my-1 mr-1">
-                <a href="/{{slugify @root.folder.title}}?tag={{this}}">{{this}}</a>
-            </span>
+            <a class="tag is-medium my-1 mr-1" href="/{{slugify @root.folder.title}}?tag={{this}}">{{this}}</a>
         {{/if}}
     {{/each}}
 </div>
