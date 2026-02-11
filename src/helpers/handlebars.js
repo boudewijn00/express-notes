@@ -1,3 +1,9 @@
+const md = require('markdown-it')({
+    html: true,
+    linkify: true,
+    typographer: true
+});
+
 // Generate URL-friendly slug from text
 const slugify = (text) => {
     if (!text) return '';
@@ -22,14 +28,8 @@ module.exports = {
         args.pop();
         return args.some(arg => !!arg);
     },
-    markdown: (content) => {        
-        html = require('markdown-it')({
-            html: true,
-            linkify: true,
-            typographer: true
-          }).render(content);
-
-        return html;
+    markdown: (content) => {
+        return md.render(content);
     },
     truncateWords: (str, maxWords) => {
         if (!str) return '';

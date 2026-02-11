@@ -1,6 +1,9 @@
 const express = require('express');
+const compression = require('compression');
 const path = require('path');
 const app = express();
+
+app.use(compression());
 const port = 3000;
 const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 const articlesFolder = 'b7bc7b8a876e4254ad9865f91ddc8f70';
@@ -39,7 +42,7 @@ app.engine('handlebars', handlebars.engine({
 
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../public'), { maxAge: '1d' }));
 
 require('dotenv').config();
 
@@ -52,25 +55,23 @@ const config = {
 };
 
 function replaceResourceTitleByImageTag(notes) {
-    const promises = [];
+    const promises = notes.map(async (note) => {
+        note.body = note.body || '';
+        const regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/g;
+        const matches = [...note.body.matchAll(regex)];
 
-    for (const i in notes) {
-        const promise = (async () => {
-            const note = notes[i];
-            note.body = note.body || '';
-            const regex = /!\[([^\]]+\.(png|jpg|jpeg))\]\(:\/([a-f0-9]+)\)/g;
-            const matches = note.body.matchAll(regex);
+        const responses = await Promise.all(
+            matches.map(matched =>
+                axios.get(`${process.env.POSTGREST_HOST}/resources?title=eq.${matched[1]}`, config)
+            )
+        );
 
-            for (const matched of matches) {
-                const response = await axios.get(`${process.env.POSTGREST_HOST}/resources?title=eq.${matched[1]}`, config);
-                note.body = note.body.replace(matched[0], `<img src="data:image/png;base64,${response.data[0].contents}" />`);
-            }
+        matches.forEach((matched, idx) => {
+            note.body = note.body.replace(matched[0], `<img src="data:image/png;base64,${responses[idx].data[0].contents}" />`);
+        });
 
-            return note;
-        })();
-
-        promises.push(promise);
-    }
+        return note;
+    });
 
     return Promise.all(promises);
 }
@@ -95,13 +96,15 @@ const getNotes = async (folderId) => {
 const getRecentNotes = async () => {
     const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&order=created_time.desc&limit=5&note_id=neq.${homeArticle}&parent_id=neq.${articlesFolder}`, config);
 
-    return replaceResourceTitleByImageTag(response.data).then(results => {
-        return processLinkImages(results);
-    }).then(notes => {
-        return Promise.all(notes.map(async note => {
-            note.folder = await getFolder(note.parent_id);
-            return note;
-        }));
+    const [notes, folders] = await Promise.all([
+        replaceResourceTitleByImageTag(response.data).then(processLinkImages),
+        getFolders(),
+    ]);
+
+    const folderMap = Object.fromEntries(folders.map(f => [f.folder_id, f]));
+    return notes.map(note => {
+        note.folder = folderMap[note.parent_id];
+        return note;
     });
 };
 
