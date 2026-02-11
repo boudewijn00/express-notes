@@ -307,6 +307,40 @@ a.tag:hover {
     color: white;
   }
 
+  // Pagination styling
+  .pagination-previous,
+  .pagination-next,
+  .pagination-link {
+    background-color: #2a2a2a;
+    border-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+
+    &:hover:not([disabled]) {
+      background-color: #333333;
+      border-color: rgba(255, 255, 255, 0.25);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    &[disabled] {
+      background-color: #202020;
+      border-color: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.3);
+      opacity: 0.6;
+    }
+  }
+
+  .pagination-link.is-current {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 1);
+    font-weight: 600;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
   // #8 - Footer styling
   .site-footer {
     background-color: #161616;
