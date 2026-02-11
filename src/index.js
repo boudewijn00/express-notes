@@ -223,6 +223,7 @@ app.get('/', (req, res) => {
             latestArticle: latestArticle,
             // SEO
             canonicalUrl: siteUrl,
+            metaKeywords: getTagsFromNotes(latestArticle ? [...recentNotes, latestArticle] : recentNotes).join(', '),
             metaDescription: createMetaDescription(note.link_excerpt || note.body) || 'Web development notes and bookmarks about PHP, Laravel, Node.js, APIs, databases, and more',
         });
     }).catch((error) => {
@@ -256,6 +257,7 @@ app.get('/search', (req, res) => {
             // SEO
             pageTitle: `Search: ${query}`,
             canonicalUrl: `${siteUrl}/search?q=${encodeURIComponent(query)}`,
+            metaKeywords: getTagsFromNotes(notes).join(', '),
             metaDescription: `Search results for "${query}" - ${notes.length} results found`,
         });
     }).catch((error) => {
@@ -278,6 +280,7 @@ app.get('/about', (req, res) => {
             // SEO
             pageTitle: 'About',
             canonicalUrl: `${siteUrl}/about`,
+            metaKeywords: getTagsFromNotes(filteredNotes).join(', '),
             metaDescription: 'Articles and thoughts about web development, programming, and technology',
         });
     }).catch((error) => {
@@ -458,6 +461,7 @@ app.get('/:folderSlug', async (req, res) => {
             // SEO
             pageTitle: pageTitle,
             canonicalUrl: queryTag ? `${siteUrl}/${folderSlug}?tag=${encodeURIComponent(queryTag)}` : `${siteUrl}/${folderSlug}`,
+            metaKeywords: getTagsFromNotes(notes).join(', '),
             metaDescription: `Browse ${filteredNotesByTag.length} notes about ${folder.title}${queryTag ? ` tagged with ${queryTag}` : ''}`,
         });
     } catch (error) {
@@ -509,7 +513,12 @@ app.get('/:folderSlug/:noteSlug', async (req, res) => {
             // SEO
             pageTitle: note.title,
             canonicalUrl: canonicalUrl,
-            metaDescription: createMetaDescription(note.link_excerpt || note.body),
+            metaKeywords: (note.tags || []).join(', '),
+            metaDescription: createMetaDescription(
+                folder.folder_id === articlesFolder
+                    ? (note.body || '').split('---')[0]
+                    : (note.link_excerpt || note.body)
+            ),
             ogType: 'article',
             ogImage: note.link_image || null,
             structuredData: structuredData,
