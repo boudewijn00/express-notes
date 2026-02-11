@@ -273,6 +273,7 @@ app.get('/about', (req, res) => {
 
         res.render('about', {
             layout : 'main',
+            sidebarSpace: true,
             notes: notesGroupedByMonth,
             // SEO
             pageTitle: 'About',
@@ -499,6 +500,7 @@ app.get('/:folderSlug/:noteSlug', async (req, res) => {
         const noteArray = [note];
         res.render('note', {
             layout: 'main',
+            sidebarSpace: true,
             folder: { ...folder, slug: folderSlug },
             tags: getTagsFromNotes(noteArray),
             notes: groupNotesByMonth(noteArray.map(n => ({ ...n, slug: noteSlug }))),
