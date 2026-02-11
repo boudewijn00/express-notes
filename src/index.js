@@ -93,35 +93,6 @@ const getNotes = async (folderId) => {
     });
 };
 
-const getNotesWithPagination = async (folderId, limit = 20, offset = 0) => {
-    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&parent_id=eq.${folderId}&order=created_time.desc&note_id=neq.${homeArticle}&limit=${limit}&offset=${offset}`, config);
-
-    return replaceResourceTitleByImageTag(response.data).then(results => {
-        return processLinkImages(results);
-    });
-};
-
-const getNotesCount = async (folderId) => {
-    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=note_id&parent_id=eq.${folderId}&note_id=neq.${homeArticle}`, config, {
-        headers: {
-            ...config.headers,
-            'Prefer': 'count=exact'
-        }
-    });
-    
-    // PostgREST returns count in Content-Range header
-    const contentRange = response.headers['content-range'];
-    if (contentRange) {
-        const match = contentRange.match(/\/(\d+)$/);
-        if (match) {
-            return parseInt(match[1], 10);
-        }
-    }
-    
-    // Fallback: return the length of the data array
-    return response.data.length;
-};
-
 const getRecentNotes = async () => {
     const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&order=created_time.desc&limit=5&note_id=neq.${homeArticle}&parent_id=neq.${articlesFolder}`, config);
 

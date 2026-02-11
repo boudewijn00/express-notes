@@ -25,8 +25,10 @@
                 {{/each}}
             </ul>
         </nav>
+    {{/if}}
+    {{#if pagination.totalNotes}}
         <p class="has-text-centered is-size-7 mb-4">
-            Showing {{#if pagination.totalNotes}}{{pagination.totalNotes}}{{else}}0{{/if}} notes (Page {{pagination.currentPage}} of {{pagination.totalPages}})
+            Showing {{pagination.totalNotes}} notes{{#if (or pagination.hasNextPage pagination.hasPrevPage)}} (Page {{pagination.currentPage}} of {{pagination.totalPages}}){{/if}}
         </p>
     {{/if}}
 {{/if}}
