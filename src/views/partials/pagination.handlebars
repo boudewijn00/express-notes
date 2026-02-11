@@ -1,0 +1,34 @@
+{{#if pagination}}
+    {{#if (or pagination.hasNextPage pagination.hasPrevPage)}}
+        <nav class="pagination is-centered mb-5" role="navigation" aria-label="pagination">
+            {{#if pagination.hasPrevPage}}
+                <a class="pagination-previous" href="?{{#if @root.queryTag}}tag={{@root.queryTag}}&{{/if}}page={{pagination.prevPage}}">Previous</a>
+            {{else}}
+                <a class="pagination-previous" disabled>Previous</a>
+            {{/if}}
+            
+            {{#if pagination.hasNextPage}}
+                <a class="pagination-next" href="?{{#if @root.queryTag}}tag={{@root.queryTag}}&{{/if}}page={{pagination.nextPage}}">Next page</a>
+            {{else}}
+                <a class="pagination-next" disabled>Next page</a>
+            {{/if}}
+            
+            <ul class="pagination-list">
+                {{#each pagination.pages}}
+                    <li>
+                        {{#if this.isCurrent}}
+                            <a class="pagination-link is-current" aria-label="Page {{this.number}}" aria-current="page">{{this.number}}</a>
+                        {{else}}
+                            <a class="pagination-link" href="?{{#if @root.queryTag}}tag={{@root.queryTag}}&{{/if}}page={{this.number}}" aria-label="Goto page {{this.number}}">{{this.number}}</a>
+                        {{/if}}
+                    </li>
+                {{/each}}
+            </ul>
+        </nav>
+    {{/if}}
+    {{#if pagination.totalNotes}}
+        <p class="has-text-centered is-size-7 mb-4">
+            Showing {{pagination.totalNotes}} notes{{#if (or pagination.hasNextPage pagination.hasPrevPage)}} (Page {{pagination.currentPage}} of {{pagination.totalPages}}){{/if}}
+        </p>
+    {{/if}}
+{{/if}}
