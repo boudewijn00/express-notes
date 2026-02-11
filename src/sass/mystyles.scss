@@ -332,11 +332,12 @@ a.tag:hover {
   .pagination-link.is-current {
     background-color: #ff94a8;
     border-color: #ff94a8;
-    color: #1f1f1f;
+    color: #0a0a0a;
 
     &:hover {
       background-color: #ffaab9;
       border-color: #ffaab9;
+      color: #0a0a0a;
     }
   }
 
