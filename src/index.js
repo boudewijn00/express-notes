@@ -51,6 +51,7 @@ const axios = require('axios');
 
 // Constants
 const MAX_TOPICS = 10; // Maximum number of topics allowed in newsletter subscription
+const DEFAULT_FREQUENCY = 'weekly'; // Default frequency for newsletter subscription
 // RFC 5322 compliant email validation regex
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
@@ -332,13 +333,16 @@ app.post('/newsletter', async (req, res) => {
         const first_name = req.body.first_name ? req.body.first_name.trim() : '';
         const last_name = req.body.last_name ? req.body.last_name.trim() : '';
         const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
-        const frequency = req.body.frequency ? req.body.frequency.trim() : 'weekly';
+        const frequency = req.body.frequency ? req.body.frequency.trim() : DEFAULT_FREQUENCY;
         // Topics can be a single value or an array when multiple checkboxes are checked
         const topicsInput = req.body.topics;
         
+        // Get valid topic folders for validation
+        const topicFolders = await getTopicFolders();
+        const validTopicTitles = topicFolders.map(f => f.title);
+        
         // Validate required fields (topics is optional)
         if (!first_name || !last_name || !email) {
-            const topicFolders = await getTopicFolders();
             return renderNewsletterPage(res, { 
                 error: 'First name, last name, and email are required.',
                 folders: topicFolders
@@ -347,7 +351,6 @@ app.post('/newsletter', async (req, res) => {
 
         // Validate email format
         if (!EMAIL_REGEX.test(email)) {
-            const topicFolders = await getTopicFolders();
             return renderNewsletterPage(res, { 
                 error: 'Please provide a valid email address.',
                 folders: topicFolders
@@ -357,20 +360,25 @@ app.post('/newsletter', async (req, res) => {
         // Validate frequency (only weekly and monthly allowed, default to weekly)
         const validFrequencies = ['weekly', 'monthly'];
         if (!validFrequencies.includes(frequency)) {
-            const topicFolders = await getTopicFolders();
             return renderNewsletterPage(res, { 
                 error: 'Please select a valid frequency.',
                 folders: topicFolders
             });
         }
 
-        // Process topics - can be string, array, or undefined
+        // Process and validate topics - can be string, array, or undefined
         let topics = [];
         if (topicsInput) {
             if (Array.isArray(topicsInput)) {
-                topics = topicsInput.map(t => t.trim()).filter(t => t.length > 0).slice(0, MAX_TOPICS);
+                topics = topicsInput
+                    .map(t => t.trim())
+                    .filter(t => t.length > 0 && validTopicTitles.includes(t))
+                    .slice(0, MAX_TOPICS);
             } else if (typeof topicsInput === 'string') {
-                topics = [topicsInput.trim()].filter(t => t.length > 0);
+                const trimmed = topicsInput.trim();
+                if (trimmed && validTopicTitles.includes(trimmed)) {
+                    topics = [trimmed];
+                }
             }
         }
 
