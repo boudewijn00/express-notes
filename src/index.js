@@ -304,46 +304,38 @@ app.get('/newsletter', (req, res) => {
     });
 });
 
+// Helper function for newsletter page rendering
+const renderNewsletterPage = (res, options = {}) => {
+    res.render('newsletter', {
+        layout: 'main',
+        sidebarSpace: true,
+        ...options,
+        // SEO
+        pageTitle: 'Newsletter Subscription',
+        canonicalUrl: `${siteUrl}/newsletter`,
+        metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
+    });
+};
+
 app.post('/newsletter', async (req, res) => {
     try {
         const { first_name, last_name, email, frequency, topics } = req.body;
 
         // Validate required fields
         if (!first_name || !last_name || !email || !frequency) {
-            return res.render('newsletter', {
-                layout: 'main',
-                sidebarSpace: true,
-                error: 'All fields except topics are required.',
-                pageTitle: 'Newsletter Subscription',
-                canonicalUrl: `${siteUrl}/newsletter`,
-                metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
-            });
+            return renderNewsletterPage(res, { error: 'All fields except topics are required.' });
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Validate email format - more comprehensive regex
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
         if (!emailRegex.test(email)) {
-            return res.render('newsletter', {
-                layout: 'main',
-                sidebarSpace: true,
-                error: 'Please provide a valid email address.',
-                pageTitle: 'Newsletter Subscription',
-                canonicalUrl: `${siteUrl}/newsletter`,
-                metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
-            });
+            return renderNewsletterPage(res, { error: 'Please provide a valid email address.' });
         }
 
         // Validate frequency
         const validFrequencies = ['daily', 'weekly', 'monthly'];
         if (!validFrequencies.includes(frequency)) {
-            return res.render('newsletter', {
-                layout: 'main',
-                sidebarSpace: true,
-                error: 'Please select a valid frequency.',
-                pageTitle: 'Newsletter Subscription',
-                canonicalUrl: `${siteUrl}/newsletter`,
-                metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
-            });
+            return renderNewsletterPage(res, { error: 'Please select a valid frequency.' });
         }
 
         // Prepare the data for PostgREST
@@ -360,15 +352,7 @@ app.post('/newsletter', async (req, res) => {
         // Post to PostgREST subscribers endpoint
         await axios.post(`${process.env.POSTGREST_HOST}/subscribers`, subscriberData, config);
 
-        res.render('newsletter', {
-            layout: 'main',
-            sidebarSpace: true,
-            success: true,
-            // SEO
-            pageTitle: 'Newsletter Subscription',
-            canonicalUrl: `${siteUrl}/newsletter`,
-            metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
-        });
+        renderNewsletterPage(res, { success: true });
     } catch (error) {
         // Check for duplicate email error (PostgreSQL unique constraint violation)
         let errorMessage = 'Failed to subscribe. Please try again later.';
@@ -378,15 +362,7 @@ app.post('/newsletter', async (req, res) => {
             errorMessage = 'Invalid data provided. Please check your input.';
         }
 
-        res.render('newsletter', {
-            layout: 'main',
-            sidebarSpace: true,
-            error: errorMessage,
-            // SEO
-            pageTitle: 'Newsletter Subscription',
-            canonicalUrl: `${siteUrl}/newsletter`,
-            metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
-        });
+        renderNewsletterPage(res, { error: errorMessage });
     }
 });
 
