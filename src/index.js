@@ -49,6 +49,11 @@ require('dotenv').config();
 
 const axios = require('axios');
 
+// Constants
+const MAX_TOPICS = 10; // Maximum number of topics allowed in newsletter subscription
+// RFC 5322 compliant email validation regex
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
 const config = {
     headers: {
         'Authorization': process.env.POSTGREST_TOKEN,
@@ -312,21 +317,20 @@ app.get('/newsletter', (req, res) => {
 
 app.post('/newsletter', async (req, res) => {
     try {
-        const { first_name, last_name, email, frequency, topics } = req.body;
+        // Extract and trim fields immediately to ensure consistency
+        const first_name = req.body.first_name ? req.body.first_name.trim() : '';
+        const last_name = req.body.last_name ? req.body.last_name.trim() : '';
+        const email = req.body.email ? req.body.email.trim() : '';
+        const frequency = req.body.frequency;
+        const topics = req.body.topics;
 
         // Validate required fields
         if (!first_name || !last_name || !email || !frequency) {
             return renderNewsletterPage(res, { error: 'All fields except topics are required.' });
         }
 
-        // Validate names are not empty after trimming
-        if (first_name.trim().length === 0 || last_name.trim().length === 0) {
-            return renderNewsletterPage(res, { error: 'First name and last name cannot be empty.' });
-        }
-
-        // Validate email format - more comprehensive regex
-        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-        if (!emailRegex.test(email)) {
+        // Validate email format
+        if (!EMAIL_REGEX.test(email)) {
             return renderNewsletterPage(res, { error: 'Please provide a valid email address.' });
         }
 
@@ -338,12 +342,12 @@ app.post('/newsletter', async (req, res) => {
 
         // Prepare the data for PostgREST
         const subscriberData = {
-            first_name: first_name.trim(),
-            last_name: last_name.trim(),
-            email: email.trim().toLowerCase(),
+            first_name,
+            last_name,
+            email: email.toLowerCase(),
             frequency,
             topics: typeof topics === 'string' && topics.trim() 
-                ? topics.split(',').map(t => t.trim()).filter(t => t.length > 0).slice(0, 10)
+                ? topics.split(',').map(t => t.trim()).filter(t => t.length > 0).slice(0, MAX_TOPICS)
                 : []
         };
 
