@@ -92,8 +92,7 @@ a:not(.tag):not(.navbar-item):not(.menu-list a):not(.pagination-link):not(.pagin
 .pagination-previous,
 .pagination-next,
 .pagination-link {
-    &[aria-disabled="true"],
-    &[disabled] {
+    &[aria-disabled="true"] {
         cursor: not-allowed;
         opacity: 0.5;
         pointer-events: none;
@@ -327,14 +326,13 @@ a.tag:hover {
     border-color: rgba(255, 255, 255, 0.15);
     color: rgba(255, 255, 255, 0.8);
 
-    &:hover:not([aria-disabled="true"]):not([disabled]) {
+    &:hover:not([aria-disabled="true"]) {
       background-color: #333333;
       border-color: rgba(255, 255, 255, 0.25);
       color: rgba(255, 255, 255, 0.9);
     }
 
-    &[aria-disabled="true"],
-    &[disabled] {
+    &[aria-disabled="true"] {
       background-color: #202020;
       border-color: rgba(255, 255, 255, 0.08);
       color: rgba(255, 255, 255, 0.3);
