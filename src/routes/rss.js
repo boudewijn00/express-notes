@@ -88,10 +88,11 @@ router.get('/rss.xml', async (req, res) => {
   </channel>
 </rss>`;
 
-        res.set('Content-Type', 'application/xml');
+        res.set('Content-Type', 'application/rss+xml');
         res.send(xml);
     } catch (error) {
         console.error('Error generating RSS feed:', error);
+        res.set('Content-Type', 'text/plain');
         res.status(500).send('Error generating RSS feed');
     }
 });
