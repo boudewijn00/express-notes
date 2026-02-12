@@ -28,6 +28,7 @@ const sitemapRouter = require('./routes/sitemap');
 const redirectsRouter = require('./routes/redirects');
 const foldersRouter = require('./routes/folders');
 const notesRouter = require('./routes/notes');
+const newsletterRouter = require('./routes/newsletter');
 
 // Use route modules
 app.use('/', homeRouter);
@@ -37,6 +38,7 @@ app.use('/', sitemapRouter);
 app.use('/', redirectsRouter);
 app.use('/', foldersRouter);
 app.use('/', notesRouter);
+app.use('/', newsletterRouter);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);

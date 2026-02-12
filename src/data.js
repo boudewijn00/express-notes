@@ -108,6 +108,57 @@ const searchNotes = async (query) => {
     }));
 };
 
+// Get notes from the past week (7 days)
+const getNotesFromPastWeek = async () => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const isoDate = oneWeekAgo.toISOString();
+    
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&created_time=gte.${isoDate}&order=created_time.desc&note_id=neq.${homeArticle}`, config);
+    
+    const [notes, folders] = await Promise.all([
+        replaceResourceTitleByImageTag(response.data).then(processLinkImages),
+        getFolders(),
+    ]);
+
+    const folderMap = Object.fromEntries(folders.map(f => [f.folder_id, f]));
+    return notes.map(note => {
+        note.folder = folderMap[note.parent_id];
+        return note;
+    });
+};
+
+// Get notes from the past month (30 days)
+const getNotesFromPastMonth = async () => {
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+    const isoDate = oneMonthAgo.toISOString();
+    
+    const response = await axios.get(`${process.env.POSTGREST_HOST}/notes?select=*&created_time=gte.${isoDate}&order=created_time.desc&note_id=neq.${homeArticle}`, config);
+    
+    const [notes, folders] = await Promise.all([
+        replaceResourceTitleByImageTag(response.data).then(processLinkImages),
+        getFolders(),
+    ]);
+
+    const folderMap = Object.fromEntries(folders.map(f => [f.folder_id, f]));
+    return notes.map(note => {
+        note.folder = folderMap[note.parent_id];
+        return note;
+    });
+};
+
+// Get all subscribers from PostgREST
+const getSubscribers = async () => {
+    try {
+        const response = await axios.get(`${process.env.POSTGREST_HOST}/subscribers?order=email`, config);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching subscribers:', error.message);
+        return [];
+    }
+};
+
 module.exports = {
     homeArticle,
     articlesFolder,
@@ -118,5 +169,8 @@ module.exports = {
     getFolderBySlug,
     getNoteBySlug,
     getNoteByNoteId,
-    searchNotes
+    searchNotes,
+    getNotesFromPastWeek,
+    getNotesFromPastMonth,
+    getSubscribers
 };
