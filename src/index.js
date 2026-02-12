@@ -317,12 +317,12 @@ app.get('/newsletter', (req, res) => {
 
 app.post('/newsletter', async (req, res) => {
     try {
-        // Extract and trim fields immediately to ensure consistency
+        // Extract and trim/normalize fields immediately to ensure consistency
         const first_name = req.body.first_name ? req.body.first_name.trim() : '';
         const last_name = req.body.last_name ? req.body.last_name.trim() : '';
-        const email = req.body.email ? req.body.email.trim() : '';
-        const frequency = req.body.frequency;
-        const topics = req.body.topics;
+        const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
+        const frequency = req.body.frequency ? req.body.frequency.trim() : '';
+        const topics = req.body.topics ? req.body.topics.trim() : '';
 
         // Validate required fields
         if (!first_name || !last_name || !email || !frequency) {
@@ -344,9 +344,9 @@ app.post('/newsletter', async (req, res) => {
         const subscriberData = {
             first_name,
             last_name,
-            email: email.toLowerCase(),
+            email,
             frequency,
-            topics: typeof topics === 'string' && topics.trim() 
+            topics: topics
                 ? topics.split(',').map(t => t.trim()).filter(t => t.length > 0).slice(0, MAX_TOPICS)
                 : []
         };
