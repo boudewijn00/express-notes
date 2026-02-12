@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 
 app.use(compression());
+app.use(express.urlencoded({ extended: true }));
 const port = 3000;
 const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 const articlesFolder = 'b7bc7b8a876e4254ad9865f91ddc8f70';
@@ -47,6 +48,11 @@ app.use(express.static(path.join(__dirname, '../public'), { maxAge: '1d' }));
 require('dotenv').config();
 
 const axios = require('axios');
+
+// Constants
+const MAX_TOPICS = 10; // Maximum number of topics allowed in newsletter subscription
+// RFC 5322 compliant email validation regex
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 const config = {
     headers: {
@@ -290,6 +296,78 @@ app.get('/about', (req, res) => {
         });
     });
 });
+
+// Newsletter routes
+// Helper function for newsletter page rendering
+const renderNewsletterPage = (res, options = {}) => {
+    res.render('newsletter', {
+        layout: 'main',
+        sidebarSpace: true,
+        ...options,
+        // SEO
+        pageTitle: 'Newsletter Subscription',
+        canonicalUrl: `${siteUrl}/newsletter`,
+        metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
+    });
+};
+
+app.get('/newsletter', (req, res) => {
+    renderNewsletterPage(res);
+});
+
+app.post('/newsletter', async (req, res) => {
+    try {
+        // Extract and trim/normalize fields immediately to ensure consistency
+        const first_name = req.body.first_name ? req.body.first_name.trim() : '';
+        const last_name = req.body.last_name ? req.body.last_name.trim() : '';
+        const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
+        const frequency = req.body.frequency ? req.body.frequency.trim() : '';
+        const topics = req.body.topics ? req.body.topics.trim() : '';
+
+        // Validate required fields
+        if (!first_name || !last_name || !email || !frequency) {
+            return renderNewsletterPage(res, { error: 'All fields except topics are required.' });
+        }
+
+        // Validate email format
+        if (!EMAIL_REGEX.test(email)) {
+            return renderNewsletterPage(res, { error: 'Please provide a valid email address.' });
+        }
+
+        // Validate frequency
+        const validFrequencies = ['daily', 'weekly', 'monthly'];
+        if (!validFrequencies.includes(frequency)) {
+            return renderNewsletterPage(res, { error: 'Please select a valid frequency.' });
+        }
+
+        // Prepare the data for PostgREST
+        const subscriberData = {
+            first_name,
+            last_name,
+            email,
+            frequency,
+            topics: topics
+                ? topics.split(',').map(t => t.trim()).filter(t => t.length > 0).slice(0, MAX_TOPICS)
+                : []
+        };
+
+        // Post to PostgREST subscribers endpoint
+        await axios.post(`${process.env.POSTGREST_HOST}/subscribers`, subscriberData, config);
+
+        renderNewsletterPage(res, { success: true });
+    } catch (error) {
+        // Check for duplicate email error (PostgreSQL unique constraint violation)
+        let errorMessage = 'Failed to subscribe. Please try again later.';
+        if (error.response && error.response.status === 409) {
+            errorMessage = 'This email is already subscribed to our newsletter.';
+        } else if (error.response && error.response.status === 400) {
+            errorMessage = 'Invalid data provided. Please check your input.';
+        }
+
+        renderNewsletterPage(res, { error: errorMessage });
+    }
+});
+
 
 // Redirect old folder URLs to new slug-based URLs
 app.get('/folders/:id', (req, res) => {
