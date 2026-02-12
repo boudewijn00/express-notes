@@ -184,10 +184,15 @@ function generateNoteHTML(note) {
 
     if (note.body && !note.link_excerpt) {
         // For articles, render markdown but truncate
-        const plainText = note.body.replace(/<[^>]*>/g, '').replace(/[#*_`\[\]]/g, '');
+        // First escape HTML to prevent injection
+        let plainText = escapeHtml(note.body);
+        // Then remove markdown syntax
+        plainText = plainText.replace(/[#*_`\[\]]/g, '');
+        // Normalize whitespace
+        plainText = plainText.replace(/\s+/g, ' ').trim();
         const truncated = plainText.length > 300 ? plainText.substring(0, 300) + '...' : plainText;
         html += `
-            <div class="note-excerpt">${escapeHtml(truncated)}</div>
+            <div class="note-excerpt">${truncated}</div>
 `;
     }
 
