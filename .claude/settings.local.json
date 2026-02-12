@@ -15,7 +15,10 @@
       "Bash(. ~/.nvm/nvm.sh)",
       "Bash(nvm ls:*)",
       "Bash(node --version:*)",
-      "Bash(nvm use:*)"
+      "Bash(nvm use:*)",
+      "Bash(npm ls:*)",
+      "Bash(source ~/.nvm/nvm.sh)",
+      "Bash(nvm exec 22 npx sass:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
