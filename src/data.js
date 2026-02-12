@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { slugify } = require('./utils');
 
 const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 const articlesFolder = 'b7bc7b8a876e4254ad9865f91ddc8f70';
@@ -77,14 +78,12 @@ const getFolder = async (id) => {
 
 // Find folder by slug
 const getFolderBySlug = async (slug) => {
-    const { slugify } = require('./utils');
     const folders = await getFolders();
     return folders.find(f => slugify(f.title) === slug);
 };
 
 // Find note by slug within a folder
 const getNoteBySlug = async (folderId, slug) => {
-    const { slugify } = require('./utils');
     const notes = await getNotes(folderId);
     return notes.find(n => slugify(n.title) === slug);
 };
