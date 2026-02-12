@@ -28,6 +28,14 @@ module.exports = {
         args.pop();
         return args.some(arg => !!arg);
     },
+    // Helper to check if a topic is selected in the form data
+    isSelected: (selectedTopics, topicTitle) => {
+        if (!selectedTopics) return false;
+        if (Array.isArray(selectedTopics)) {
+            return selectedTopics.includes(topicTitle);
+        }
+        return selectedTopics === topicTitle;
+    },
     markdown: (content) => {
         return md.render(content);
     },

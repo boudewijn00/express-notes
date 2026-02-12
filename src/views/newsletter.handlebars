@@ -8,44 +8,68 @@
     </div>
     {{/if}}
 
-    {{#if error}}
+    {{#if errors.general}}
     <div class="notification is-danger">
-        <p>{{error}}</p>
+        <p>{{errors.general}}</p>
     </div>
     {{/if}}
 
-    <form method="POST" action="/newsletter">
+    <form method="POST" action="/newsletter" novalidate>
         <div class="field">
             <label class="label">First Name</label>
             <div class="control">
-                <input class="input" type="text" name="first_name" placeholder="John" required>
+                <input class="input {{#if errors.first_name}}is-danger{{/if}}" 
+                       type="text" 
+                       name="first_name" 
+                       placeholder="John"
+                       value="{{formData.first_name}}">
             </div>
+            {{#if errors.first_name}}
+            <p class="help is-danger">{{errors.first_name}}</p>
+            {{/if}}
         </div>
 
         <div class="field">
             <label class="label">Last Name</label>
             <div class="control">
-                <input class="input" type="text" name="last_name" placeholder="Doe" required>
+                <input class="input {{#if errors.last_name}}is-danger{{/if}}" 
+                       type="text" 
+                       name="last_name" 
+                       placeholder="Doe"
+                       value="{{formData.last_name}}">
             </div>
+            {{#if errors.last_name}}
+            <p class="help is-danger">{{errors.last_name}}</p>
+            {{/if}}
         </div>
 
         <div class="field">
             <label class="label">Email</label>
             <div class="control">
-                <input class="input" type="email" name="email" placeholder="john.doe@example.com" required>
+                <input class="input {{#if errors.email}}is-danger{{/if}}" 
+                       type="email" 
+                       name="email" 
+                       placeholder="john.doe@example.com"
+                       value="{{formData.email}}">
             </div>
+            {{#if errors.email}}
+            <p class="help is-danger">{{errors.email}}</p>
+            {{/if}}
         </div>
 
         <div class="field">
             <label class="label">Frequency</label>
             <div class="control">
-                <div class="select">
-                    <select name="frequency" required>
-                        <option value="weekly" selected>Weekly</option>
-                        <option value="monthly">Monthly</option>
+                <div class="select {{#if errors.frequency}}is-danger{{/if}}">
+                    <select name="frequency">
+                        <option value="weekly" {{#if (isEqual formData.frequency "weekly")}}selected{{else}}{{#unless formData.frequency}}selected{{/unless}}{{/if}}>Weekly</option>
+                        <option value="monthly" {{#if (isEqual formData.frequency "monthly")}}selected{{/if}}>Monthly</option>
                     </select>
                 </div>
             </div>
+            {{#if errors.frequency}}
+            <p class="help is-danger">{{errors.frequency}}</p>
+            {{/if}}
         </div>
 
         <div class="field">
@@ -54,7 +78,10 @@
                 {{#if folders}}
                     {{#each folders}}
                         <label class="checkbox" style="display: block; margin-bottom: 0.5rem;">
-                            <input type="checkbox" name="topics" value="{{this.title}}">
+                            <input type="checkbox" 
+                                   name="topics" 
+                                   value="{{this.title}}"
+                                   {{#if (isSelected ../formData.topics this.title)}}checked{{/if}}>
                             {{this.title}}
                         </label>
                     {{/each}}
