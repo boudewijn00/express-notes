@@ -92,7 +92,8 @@ a:not(.tag):not(.navbar-item):not(.menu-list a):not(.pagination-link):not(.pagin
 .pagination-previous,
 .pagination-next,
 .pagination-link {
-    &[aria-disabled="true"] {
+    &[aria-disabled="true"],
+    &[disabled] {
         cursor: not-allowed;
         opacity: 0.5;
         pointer-events: none;
