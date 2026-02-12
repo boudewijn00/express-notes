@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 
 app.use(compression());
+app.use(express.urlencoded({ extended: true }));
 const port = 3000;
 const homeArticle = '36ec96bfba5b4c10838d684de6952d4c';
 const articlesFolder = 'b7bc7b8a876e4254ad9865f91ddc8f70';
@@ -290,6 +291,57 @@ app.get('/about', (req, res) => {
         });
     });
 });
+
+// Newsletter routes
+app.get('/newsletter', (req, res) => {
+    res.render('newsletter', {
+        layout: 'main',
+        sidebarSpace: true,
+        // SEO
+        pageTitle: 'Newsletter Subscription',
+        canonicalUrl: `${siteUrl}/newsletter`,
+        metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
+    });
+});
+
+app.post('/newsletter', async (req, res) => {
+    try {
+        const { first_name, last_name, email, frequency, topics } = req.body;
+
+        // Prepare the data for PostgREST
+        const subscriberData = {
+            first_name,
+            last_name,
+            email,
+            frequency,
+            topics: topics ? topics.split(',').map(t => t.trim()) : []
+        };
+
+        // Post to PostgREST subscribers endpoint
+        await axios.post(`${process.env.POSTGREST_HOST}/subscribers`, subscriberData, config);
+
+        res.render('newsletter', {
+            layout: 'main',
+            sidebarSpace: true,
+            success: true,
+            // SEO
+            pageTitle: 'Newsletter Subscription',
+            canonicalUrl: `${siteUrl}/newsletter`,
+            metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
+        });
+    } catch (error) {
+        res.render('newsletter', {
+            layout: 'main',
+            sidebarSpace: true,
+            error: 'Failed to subscribe. Please try again later.',
+            // SEO
+            pageTitle: 'Newsletter Subscription',
+            canonicalUrl: `${siteUrl}/newsletter`,
+            metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
+        });
+    }
+});
+
 
 // Redirect old folder URLs to new slug-based URLs
 app.get('/folders/:id', (req, res) => {
