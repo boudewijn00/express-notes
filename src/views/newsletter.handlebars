@@ -62,8 +62,8 @@
             <div class="control">
                 <div class="select {{#if errors.frequency}}is-danger{{/if}}">
                     <select name="frequency">
-                        <option value="weekly" {{#if (isEqual formData.frequency "weekly")}}selected{{else}}{{#unless formData.frequency}}selected{{/unless}}{{/if}}>Weekly</option>
-                        <option value="monthly" {{#if (isEqual formData.frequency "monthly")}}selected{{/if}}>Monthly</option>
+                        <option value="weekly" {{#if (isFrequencySelected formData.frequency "weekly" "weekly")}}selected{{/if}}>Weekly</option>
+                        <option value="monthly" {{#if (isFrequencySelected formData.frequency "monthly" "weekly")}}selected{{/if}}>Monthly</option>
                     </select>
                 </div>
             </div>

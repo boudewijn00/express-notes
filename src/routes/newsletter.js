@@ -31,7 +31,7 @@ const getTopicFolders = async (getFolders, articlesFolder) => {
 };
 
 // Validation function
-const validateNewsletterForm = (formData, validTopicTitles) => {
+const validateNewsletterForm = (formData) => {
     const errors = {};
     
     // Validate first name
@@ -85,14 +85,14 @@ const initializeRoutes = (getFolders, articlesFolder, config) => {
             const validTopicTitles = topicFolders.map(f => f.title);
             
             // Validate form data
-            const formData = { first_name, last_name, email, frequency };
-            const errors = validateNewsletterForm(formData, validTopicTitles);
+            const formData = { first_name, last_name, email, frequency, topics: topicsInput };
+            const errors = validateNewsletterForm(formData);
             
             // If there are validation errors, re-render the form with errors
             if (Object.keys(errors).length > 0) {
                 return renderNewsletterPage(res, {
                     errors,
-                    formData: req.body, // Preserve user input
+                    formData, // Preserve user input
                     folders: topicFolders
                 });
             }

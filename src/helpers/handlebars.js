@@ -36,6 +36,14 @@ module.exports = {
         }
         return selectedTopics === topicTitle;
     },
+    // Helper to check if a frequency option should be selected
+    isFrequencySelected: (formFrequency, optionValue, defaultValue) => {
+        // If formFrequency is not set, check if this is the default
+        if (!formFrequency || formFrequency === '') {
+            return optionValue === defaultValue;
+        }
+        return formFrequency === optionValue;
+    },
     markdown: (content) => {
         return md.render(content);
     },
