@@ -2,15 +2,15 @@
     {{#if (or pagination.hasNextPage pagination.hasPrevPage)}}
         <nav class="pagination is-centered mb-5" role="navigation" aria-label="pagination">
             {{#if pagination.hasPrevPage}}
-                <a class="pagination-previous" href="?{{#if @root.queryTag}}tag={{@root.queryTag}}&{{/if}}page={{pagination.prevPage}}">Previous</a>
+                <a class="pagination-previous" href="?{{#if @root.queryTag}}tag={{@root.queryTag}}&{{/if}}page={{pagination.prevPage}}">Previous page</a>
             {{else}}
-                <a class="pagination-previous" disabled>Previous</a>
+                <a class="pagination-previous" aria-disabled="true" tabindex="-1">Previous page</a>
             {{/if}}
             
             {{#if pagination.hasNextPage}}
                 <a class="pagination-next" href="?{{#if @root.queryTag}}tag={{@root.queryTag}}&{{/if}}page={{pagination.nextPage}}">Next page</a>
             {{else}}
-                <a class="pagination-next" disabled>Next page</a>
+                <a class="pagination-next" aria-disabled="true" tabindex="-1">Next page</a>
             {{/if}}
             
             <ul class="pagination-list">

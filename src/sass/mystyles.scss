@@ -88,6 +88,19 @@ a:not(.tag):not(.navbar-item):not(.menu-list a):not(.pagination-link):not(.pagin
     text-decoration: underline;
 }
 
+// Pagination - Light Mode
+.pagination-previous,
+.pagination-next,
+.pagination-link {
+    text-decoration: none;
+    
+    &[aria-disabled="true"] {
+        cursor: not-allowed;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
 .bookmark-title-container + .tags {
     margin-top: 1rem;
 }
@@ -315,29 +328,31 @@ a.tag:hover {
     border-color: rgba(255, 255, 255, 0.15);
     color: rgba(255, 255, 255, 0.8);
 
-    &:hover:not([disabled]) {
+    &:hover:not([aria-disabled="true"]) {
       background-color: #333333;
       border-color: rgba(255, 255, 255, 0.25);
       color: rgba(255, 255, 255, 0.9);
     }
 
-    &[disabled] {
+    &[aria-disabled="true"] {
       background-color: #202020;
       border-color: rgba(255, 255, 255, 0.08);
       color: rgba(255, 255, 255, 0.3);
       opacity: 0.6;
+      cursor: not-allowed;
+      pointer-events: none;
     }
   }
 
   .pagination-link.is-current {
-    background-color: darken($brown-dark, 15%);
-    border-color: rgba(184, 184, 157, 0.8);
-    color: rgba(255, 255, 255, 0.95);
+    background-color: #e8b4a0;
+    border-color: rgba(232, 180, 160, 0.8);
+    color: rgba(255, 255, 255, 1);
     font-weight: 600;
 
     &:hover {
-      background-color: darken($brown-dark, 10%);
-      border-color: rgba(184, 184, 157, 0.9);
+      background-color: lighten(#e8b4a0, 5%);
+      border-color: rgba(232, 180, 160, 0.9);
       color: rgba(255, 255, 255, 1);
     }
   }
