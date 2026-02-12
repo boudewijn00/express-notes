@@ -84,7 +84,7 @@ aside.menu ul.menu-list li a::first-letter {
     padding-bottom: 1.25rem;
 }
 
-a:not(.tag):not(.navbar-item):not(.menu-list a) {
+a:not(.tag):not(.navbar-item):not(.menu-list a):not(.pagination-link):not(.pagination-previous):not(.pagination-next) {
     text-decoration: underline;
 }
 
@@ -330,14 +330,14 @@ a.tag:hover {
   }
 
   .pagination-link.is-current {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.4);
-    color: rgba(255, 255, 255, 1);
+    background-color: $brown-dark;
+    border-color: rgba(184, 184, 157, 0.6);
+    color: rgba(0, 0, 0, 0.9);
     font-weight: 600;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.5);
+      background-color: lighten($brown-dark, 5%);
+      border-color: rgba(184, 184, 157, 0.8);
     }
   }
 
