@@ -311,15 +311,19 @@ const renderNewsletterPage = (res, options = {}) => {
     });
 };
 
-app.get('/newsletter', async (req, res) => {
+// Helper function to get topic folders for newsletter
+const getTopicFolders = async () => {
     try {
         const folders = await getFolders();
-        // Filter out the articles folder for topics
-        const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
-        renderNewsletterPage(res, { folders: topicFolders });
+        return folders.filter(f => f.folder_id !== articlesFolder);
     } catch (error) {
-        renderNewsletterPage(res, { folders: [] });
+        return [];
     }
+};
+
+app.get('/newsletter', async (req, res) => {
+    const topicFolders = await getTopicFolders();
+    renderNewsletterPage(res, { folders: topicFolders });
 });
 
 app.post('/newsletter', async (req, res) => {
@@ -334,8 +338,7 @@ app.post('/newsletter', async (req, res) => {
         
         // Validate required fields (topics is optional)
         if (!first_name || !last_name || !email) {
-            const folders = await getFolders();
-            const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+            const topicFolders = await getTopicFolders();
             return renderNewsletterPage(res, { 
                 error: 'First name, last name, and email are required.',
                 folders: topicFolders
@@ -344,8 +347,7 @@ app.post('/newsletter', async (req, res) => {
 
         // Validate email format
         if (!EMAIL_REGEX.test(email)) {
-            const folders = await getFolders();
-            const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+            const topicFolders = await getTopicFolders();
             return renderNewsletterPage(res, { 
                 error: 'Please provide a valid email address.',
                 folders: topicFolders
@@ -355,8 +357,7 @@ app.post('/newsletter', async (req, res) => {
         // Validate frequency (only weekly and monthly allowed, default to weekly)
         const validFrequencies = ['weekly', 'monthly'];
         if (!validFrequencies.includes(frequency)) {
-            const folders = await getFolders();
-            const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+            const topicFolders = await getTopicFolders();
             return renderNewsletterPage(res, { 
                 error: 'Please select a valid frequency.',
                 folders: topicFolders
@@ -367,7 +368,7 @@ app.post('/newsletter', async (req, res) => {
         let topics = [];
         if (topicsInput) {
             if (Array.isArray(topicsInput)) {
-                topics = topicsInput.map(t => t.trim()).filter(t => t.length > 0);
+                topics = topicsInput.map(t => t.trim()).filter(t => t.length > 0).slice(0, MAX_TOPICS);
             } else if (typeof topicsInput === 'string') {
                 topics = [topicsInput.trim()].filter(t => t.length > 0);
             }
@@ -395,8 +396,7 @@ app.post('/newsletter', async (req, res) => {
             errorMessage = 'Invalid data provided. Please check your input.';
         }
 
-        const folders = await getFolders();
-        const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+        const topicFolders = await getTopicFolders();
         renderNewsletterPage(res, { 
             error: errorMessage,
             folders: topicFolders
