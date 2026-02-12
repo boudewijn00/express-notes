@@ -25,6 +25,8 @@ function replaceResourceTitleByImageTag(notes) {
         matches.forEach((matched, idx) => {
             if (responses[idx].data && responses[idx].data[0] && responses[idx].data[0].contents) {
                 note.body = note.body.replace(matched[0], `<img src="data:image/png;base64,${responses[idx].data[0].contents}" />`);
+            } else {
+                console.warn(`Resource not found for image: ${matched[1]} in note`);
             }
         });
 

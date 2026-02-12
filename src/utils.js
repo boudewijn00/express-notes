@@ -27,7 +27,7 @@ const getTagsFromNotes = (notes) => {
     });
 
     return [...new Set(result)];
-}
+};
 
 const groupNotesByDate = (notes) => {
     const grouped = notes.reduce((r, a) => {
