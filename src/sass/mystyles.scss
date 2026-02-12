@@ -330,14 +330,15 @@ a.tag:hover {
   }
 
   .pagination-link.is-current {
-    background-color: $brown-dark;
-    border-color: rgba(184, 184, 157, 0.6);
-    color: rgba(0, 0, 0, 0.9);
+    background-color: darken($brown-dark, 15%);
+    border-color: rgba(184, 184, 157, 0.8);
+    color: rgba(255, 255, 255, 0.95);
     font-weight: 600;
 
     &:hover {
-      background-color: lighten($brown-dark, 5%);
-      border-color: rgba(184, 184, 157, 0.8);
+      background-color: darken($brown-dark, 10%);
+      border-color: rgba(184, 184, 157, 0.9);
+      color: rgba(255, 255, 255, 1);
     }
   }
 
