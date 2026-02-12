@@ -293,17 +293,6 @@ app.get('/about', (req, res) => {
 });
 
 // Newsletter routes
-app.get('/newsletter', (req, res) => {
-    res.render('newsletter', {
-        layout: 'main',
-        sidebarSpace: true,
-        // SEO
-        pageTitle: 'Newsletter Subscription',
-        canonicalUrl: `${siteUrl}/newsletter`,
-        metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
-    });
-});
-
 // Helper function for newsletter page rendering
 const renderNewsletterPage = (res, options = {}) => {
     res.render('newsletter', {
@@ -317,6 +306,10 @@ const renderNewsletterPage = (res, options = {}) => {
     });
 };
 
+app.get('/newsletter', (req, res) => {
+    renderNewsletterPage(res);
+});
+
 app.post('/newsletter', async (req, res) => {
     try {
         const { first_name, last_name, email, frequency, topics } = req.body;
@@ -324,6 +317,11 @@ app.post('/newsletter', async (req, res) => {
         // Validate required fields
         if (!first_name || !last_name || !email || !frequency) {
             return renderNewsletterPage(res, { error: 'All fields except topics are required.' });
+        }
+
+        // Validate names are not empty after trimming
+        if (first_name.trim().length === 0 || last_name.trim().length === 0) {
+            return renderNewsletterPage(res, { error: 'First name and last name cannot be empty.' });
         }
 
         // Validate email format - more comprehensive regex
