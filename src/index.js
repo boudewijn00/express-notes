@@ -308,13 +308,53 @@ app.post('/newsletter', async (req, res) => {
     try {
         const { first_name, last_name, email, frequency, topics } = req.body;
 
+        // Validate required fields
+        if (!first_name || !last_name || !email || !frequency) {
+            return res.render('newsletter', {
+                layout: 'main',
+                sidebarSpace: true,
+                error: 'All fields except topics are required.',
+                pageTitle: 'Newsletter Subscription',
+                canonicalUrl: `${siteUrl}/newsletter`,
+                metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
+            });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.render('newsletter', {
+                layout: 'main',
+                sidebarSpace: true,
+                error: 'Please provide a valid email address.',
+                pageTitle: 'Newsletter Subscription',
+                canonicalUrl: `${siteUrl}/newsletter`,
+                metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
+            });
+        }
+
+        // Validate frequency
+        const validFrequencies = ['daily', 'weekly', 'monthly'];
+        if (!validFrequencies.includes(frequency)) {
+            return res.render('newsletter', {
+                layout: 'main',
+                sidebarSpace: true,
+                error: 'Please select a valid frequency.',
+                pageTitle: 'Newsletter Subscription',
+                canonicalUrl: `${siteUrl}/newsletter`,
+                metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
+            });
+        }
+
         // Prepare the data for PostgREST
         const subscriberData = {
-            first_name,
-            last_name,
-            email,
+            first_name: first_name.trim(),
+            last_name: last_name.trim(),
+            email: email.trim().toLowerCase(),
             frequency,
-            topics: topics ? topics.split(',').map(t => t.trim()) : []
+            topics: typeof topics === 'string' && topics.trim() 
+                ? topics.split(',').map(t => t.trim()).filter(t => t.length > 0).slice(0, 10)
+                : []
         };
 
         // Post to PostgREST subscribers endpoint
@@ -330,10 +370,18 @@ app.post('/newsletter', async (req, res) => {
             metaDescription: 'Subscribe to our newsletter to receive updates about web development notes and articles',
         });
     } catch (error) {
+        // Check for duplicate email error (PostgreSQL unique constraint violation)
+        let errorMessage = 'Failed to subscribe. Please try again later.';
+        if (error.response && error.response.status === 409) {
+            errorMessage = 'This email is already subscribed to our newsletter.';
+        } else if (error.response && error.response.status === 400) {
+            errorMessage = 'Invalid data provided. Please check your input.';
+        }
+
         res.render('newsletter', {
             layout: 'main',
             sidebarSpace: true,
-            error: 'Failed to subscribe. Please try again later.',
+            error: errorMessage,
             // SEO
             pageTitle: 'Newsletter Subscription',
             canonicalUrl: `${siteUrl}/newsletter`,
