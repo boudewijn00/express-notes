@@ -311,8 +311,15 @@ const renderNewsletterPage = (res, options = {}) => {
     });
 };
 
-app.get('/newsletter', (req, res) => {
-    renderNewsletterPage(res);
+app.get('/newsletter', async (req, res) => {
+    try {
+        const folders = await getFolders();
+        // Filter out the articles folder for topics
+        const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+        renderNewsletterPage(res, { folders: topicFolders });
+    } catch (error) {
+        renderNewsletterPage(res, { folders: [] });
+    }
 });
 
 app.post('/newsletter', async (req, res) => {
@@ -321,23 +328,49 @@ app.post('/newsletter', async (req, res) => {
         const first_name = req.body.first_name ? req.body.first_name.trim() : '';
         const last_name = req.body.last_name ? req.body.last_name.trim() : '';
         const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
-        const frequency = req.body.frequency ? req.body.frequency.trim() : '';
-        const topics = req.body.topics ? req.body.topics.trim() : '';
-
-        // Validate required fields
-        if (!first_name || !last_name || !email || !frequency) {
-            return renderNewsletterPage(res, { error: 'All fields except topics are required.' });
+        const frequency = req.body.frequency ? req.body.frequency.trim() : 'weekly';
+        // Topics can be a single value or an array when multiple checkboxes are checked
+        const topicsInput = req.body.topics;
+        
+        // Validate required fields (topics is optional)
+        if (!first_name || !last_name || !email) {
+            const folders = await getFolders();
+            const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+            return renderNewsletterPage(res, { 
+                error: 'First name, last name, and email are required.',
+                folders: topicFolders
+            });
         }
 
         // Validate email format
         if (!EMAIL_REGEX.test(email)) {
-            return renderNewsletterPage(res, { error: 'Please provide a valid email address.' });
+            const folders = await getFolders();
+            const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+            return renderNewsletterPage(res, { 
+                error: 'Please provide a valid email address.',
+                folders: topicFolders
+            });
         }
 
-        // Validate frequency
-        const validFrequencies = ['daily', 'weekly', 'monthly'];
+        // Validate frequency (only weekly and monthly allowed, default to weekly)
+        const validFrequencies = ['weekly', 'monthly'];
         if (!validFrequencies.includes(frequency)) {
-            return renderNewsletterPage(res, { error: 'Please select a valid frequency.' });
+            const folders = await getFolders();
+            const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+            return renderNewsletterPage(res, { 
+                error: 'Please select a valid frequency.',
+                folders: topicFolders
+            });
+        }
+
+        // Process topics - can be string, array, or undefined
+        let topics = [];
+        if (topicsInput) {
+            if (Array.isArray(topicsInput)) {
+                topics = topicsInput.map(t => t.trim()).filter(t => t.length > 0);
+            } else if (typeof topicsInput === 'string') {
+                topics = [topicsInput.trim()].filter(t => t.length > 0);
+            }
         }
 
         // Prepare the data for PostgREST
@@ -346,9 +379,7 @@ app.post('/newsletter', async (req, res) => {
             last_name,
             email,
             frequency,
-            topics: topics
-                ? topics.split(',').map(t => t.trim()).filter(t => t.length > 0).slice(0, MAX_TOPICS)
-                : []
+            topics
         };
 
         // Post to PostgREST subscribers endpoint
@@ -364,7 +395,12 @@ app.post('/newsletter', async (req, res) => {
             errorMessage = 'Invalid data provided. Please check your input.';
         }
 
-        renderNewsletterPage(res, { error: errorMessage });
+        const folders = await getFolders();
+        const topicFolders = folders.filter(f => f.folder_id !== articlesFolder);
+        renderNewsletterPage(res, { 
+            error: errorMessage,
+            folders: topicFolders
+        });
     }
 });
 

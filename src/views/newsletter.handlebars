@@ -41,9 +41,7 @@
             <div class="control">
                 <div class="select">
                     <select name="frequency" required>
-                        <option value="">Select frequency</option>
-                        <option value="daily">Daily</option>
-                        <option value="weekly">Weekly</option>
+                        <option value="weekly" selected>Weekly</option>
                         <option value="monthly">Monthly</option>
                     </select>
                 </div>
@@ -51,11 +49,20 @@
         </div>
 
         <div class="field">
-            <label class="label">Topics</label>
+            <label class="label">Topics (Optional)</label>
             <div class="control">
-                <input class="input" type="text" name="topics" placeholder="e.g., web development, databases, APIs">
+                {{#if folders}}
+                    {{#each folders}}
+                        <label class="checkbox" style="display: block; margin-bottom: 0.5rem;">
+                            <input type="checkbox" name="topics" value="{{this.title}}">
+                            {{this.title}}
+                        </label>
+                    {{/each}}
+                {{else}}
+                    <p class="help">No topics available</p>
+                {{/if}}
             </div>
-            <p class="help">Comma-separated list of topics you're interested in</p>
+            <p class="help">Select the topics you're interested in</p>
         </div>
 
         <div class="field is-grouped">
