@@ -15,8 +15,10 @@ const slugify = (text) => {
 // Helper to create meta description from text
 const createMetaDescription = (text, maxLength = 160) => {
     if (!text) return null;
-    // Strip HTML tags and markdown
-    const clean = text.replace(/<[^>]*>/g, '').replace(/[#*_`\[\]]/g, '').trim();
+    // Strip HTML tags and markdown - remove all tags first, then clean markdown
+    let clean = text.replace(/<[^>]*>/g, '');  // Remove all HTML tags
+    clean = clean.replace(/<script[^>]*>.*?<\/script>/gi, '');  // Extra safety: remove any script tags
+    clean = clean.replace(/[#*_`\[\]]/g, '').trim();  // Remove markdown syntax
     if (clean.length <= maxLength) return clean;
     return clean.substring(0, maxLength - 3).trim() + '...';
 };
