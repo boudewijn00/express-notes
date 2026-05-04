@@ -124,29 +124,29 @@ a.tag:hover {
     flex-direction: column;
 }
 
-.latest-article-box {
+.recent-notes-box {
     order: 0;
+}
+
+.latest-article-box {
+    order: 1;
 }
 
 .main-note-box {
     order: 2;
 }
 
-.recent-notes-box {
-    order: 1;
-}
-
 @media screen and (min-width: 769px) {
+    .recent-notes-box {
+        order: 0;
+    }
+  
     .main-note-box {
         order: 1;
     }
 
     .latest-article-box {
         order: 2;
-    }
-
-    .recent-notes-box {
-        order: 3;
     }
 }
 
