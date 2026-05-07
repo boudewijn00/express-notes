@@ -1,0 +1,41 @@
+<div class="newsletter-container">
+    <div class="box">
+        <h1 class="title is-3">📧 Newsletter - {{periodText}}</h1>
+        <div class="buttons">
+            <a href="/newsletter?period=week" class="button {{#if (isEqual period 'week')}}is-link{{/if}}">Weekly</a>
+            <a href="/newsletter?period=month" class="button {{#if (isEqual period 'month')}}is-link{{/if}}">Monthly</a>
+        </div>
+        <p class="subtitle is-6">Preview of the newsletter content that will be sent to subscribers</p>
+    </div>
+
+    {{#if articleNotes.length}}
+    <div class="box">
+        <h2 class="title is-4">📝 Articles</h2>
+        <hr/>
+        {{#each articleNotes}}
+            <div class="block">
+                {{> bookmark this showDate=true}}
+            </div>
+            {{#unless @last}}<hr/>{{/unless}}
+        {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if notes.length}}
+    <div class="box">
+        <h2 class="title is-4">🔖 Bookmarks & Notes</h2>
+        <p class="subtitle is-6 mb-4">Total: {{notes.length}} {{#if (isEqual notes.length 1)}}note{{else}}notes{{/if}}</p>
+        <hr/>
+        {{#each notes}}
+            <div class="block">
+                {{> bookmark this showDate=true}}
+            </div>
+            {{#unless @last}}<hr/>{{/unless}}
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="box">
+        <p class="has-text-centered">No notes found for the {{periodText}}.</p>
+    </div>
+    {{/if}}
+</div>
